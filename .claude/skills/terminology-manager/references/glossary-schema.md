@@ -6,15 +6,15 @@ JSON schema for glossary entries used in working glossary and persistent glossar
 
 ```json
 {
-  "source_term": "Game Software",
-  "target_term": "게임 소프트웨어",
+  "source_term": "Confidential Information",
+  "target_term": "비밀정보",
   "source_lang": "en",
   "target_lang": "ko",
-  "context": "Defined in Article 1.1",
+  "context": "Defined in Article 1.1 of NDA",
   "origin": "persistent",
   "library_profile": null,
-  "alternatives_considered": ["게임 프로그램", "게임SW"],
-  "selection_rationale": "법제처 표준 용어 + 업계 관행",
+  "alternatives_considered": ["기밀정보", "비밀 정보"],
+  "selection_rationale": "법제처 표준 용어 + 실무 관행상 '비밀정보'가 가장 보편적",
   "status": "confirmed",
   "last_used": "2026-03-16",
   "usage_count": 5
@@ -65,7 +65,7 @@ Working glossary files (`/output/working/working-glossary.json`):
 {
   "source_lang": "en",
   "target_lang": "ko",
-  "library_profile": "pearl-abyss",
+  "library_profile": "acme-corp",
   "entries": [ ... ]
 }
 ```

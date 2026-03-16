@@ -61,8 +61,12 @@ Collect: `user_name`, `user_affiliation`, `user_role`
 Collect: `primary_language_pairs` (array of `{source, target}`)
 
 **3. 주요 문서 유형**
-> "자주 번역하시는 문서 유형이 있으면 알려주세요.
-> (예: EULA, 이용약관, 개인정보처리방침, NDA, 라이선스 계약서 등)"
+> "자주 번역하시는 문서 유형이 있으면 알려주세요. 예를 들어:
+> - 계약서류: NDA, 라이선스 계약, 합작투자 계약, 공급 계약, 근로 계약
+> - 소비자 대상: 이용약관, 개인정보처리방침, EULA, 쿠키 정책
+> - 기업·규제: 정관, 규제 서류, 컴플라이언스 문서
+> - 분쟁·소송: 법률의견서, 합의서, 중재 조항
+> - IP·기술: 특허 라이선스, SaaS 계약, 데이터 처리 계약"
 
 Collect: `common_document_types` (array)
 
@@ -105,7 +109,7 @@ Summarize all settings and ask for confirmation. On confirm, save to `config.jso
       {"source": "en", "target": "ko"},
       {"source": "ko", "target": "en"}
     ],
-    "common_document_types": ["eula", "privacy-policy", "nda"],
+    "common_document_types": ["nda", "license-agreement", "terms-of-service", "privacy-policy"],
     "default_output_format": "docx",
     "default_mode": "normal",
     "default_english_variant": "international"

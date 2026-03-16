@@ -59,7 +59,7 @@ Contracts may also use:
 
 ### At First Occurrence
 ```
-게임 소프트웨어(Game Software, 이하 "소프트웨어"라 한다)
+비밀정보(Confidential Information, 이하 "비밀정보"라 한다)
 ```
 Pattern: `target_term(source_term, 이하 "abbreviation"이라 한다)`
 

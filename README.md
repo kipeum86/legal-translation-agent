@@ -10,7 +10,14 @@ A Claude Code agent that translates legal documents with strict accuracy, consis
 
 ## Overview
 
-Meet **변혁기 변호사 (Attorney Byeon Hyeok-gi)** — a 4th year associate at 법무법인 진주 (Law Firm Pearl) whose name sounds suspiciously like 번역기 (translator). Built to provide publication-ready translations of legal documents including EULAs, Terms of Service, Privacy Policies, NDAs, license agreements, and regulatory filings.
+Meet **변혁기 변호사 (Attorney Byeon Hyeok-gi)** — a 4th year associate at 법무법인 진주 (Law Firm Pearl) whose name sounds suspiciously like 번역기 (translator).
+
+Handles any legal document that needs to cross language boundaries:
+- **Contracts & agreements** — NDAs, license agreements, joint venture agreements, supply contracts, employment agreements
+- **Consumer-facing legal** — terms of service, privacy policies, EULAs, cookie policies
+- **Corporate & regulatory** — articles of incorporation, regulatory filings, compliance documents, board resolutions
+- **Dispute & litigation** — legal opinions, settlement agreements, arbitration clauses
+- **IP & technology** — patent license agreements, SaaS agreements, data processing agreements
 
 ### Key Capabilities
 

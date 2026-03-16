@@ -55,7 +55,7 @@ If segmented, also read:
   - Company-specific terminology
 
 ### 5. Defined Term Convention
-- At first occurrence: `target_term(source_term)` — e.g., "게임 소프트웨어(Game Software)"
+- At first occurrence: `target_term(source_term)` — e.g., "비밀정보(Confidential Information)"
 - Subsequent occurrences: target term only
 - Maintain the exact same translation throughout
 
