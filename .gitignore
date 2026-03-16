@@ -1,0 +1,15 @@
+# Source documents (may contain confidential legal documents)
+input/
+
+# User-managed Library assets (confidential)
+library/
+
+# Output artifacts
+output/
+
+# Design document (internal reference only)
+legal-doc-translator-agent-design.md
+
+# OS files
+.DS_Store
+**/.DS_Store
