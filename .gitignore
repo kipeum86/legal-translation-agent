@@ -5,6 +5,7 @@ input/*
 # User-managed Library assets (confidential)
 library/*
 !library/.gitkeep
+!library/_example/
 
 # Output artifacts
 output/documents/*
