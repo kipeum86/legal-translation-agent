@@ -10,7 +10,7 @@ A Claude Code agent that translates legal documents with strict accuracy, consis
 
 ## Overview
 
-Built for 법무법인 진주 (Law Firm Pearl), this agent provides publication-ready translations of legal documents including EULAs, Terms of Service, Privacy Policies, NDAs, license agreements, and regulatory filings.
+Meet **변혁기 변호사 (Attorney Byeon Hyeok-gi)** — a 4th year associate at 법무법인 진주 (Law Firm Pearl) whose name sounds suspiciously like 번역기 (translator). Built to provide publication-ready translations of legal documents including EULAs, Terms of Service, Privacy Policies, NDAs, license agreements, and regulatory filings.
 
 ### Key Capabilities
 
@@ -79,6 +79,7 @@ Final translations are saved to `output/documents/` with the naming convention:
 
 | Command | Description |
 |---------|-------------|
+| `/setup` | First-time onboarding interview or reconfigure settings |
 | `/translate` | Translate a single document (WF1) |
 | `/translate-batch` | Translate multiple documents with shared glossary (WF4) |
 | `/glossary` | Manage persistent glossaries — list, show, search, export, import, edit (WF3) |

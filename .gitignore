@@ -6,6 +6,14 @@ input/*
 library/*
 !library/.gitkeep
 !library/_example/
+library/_example/inbox/*
+!library/_example/inbox/.gitkeep
+library/_example/references/*
+!library/_example/references/.gitkeep
+library/_example/glossaries/*
+!library/_example/glossaries/.gitkeep
+library/_example/style-guides/*
+!library/_example/style-guides/.gitkeep
 
 # Output artifacts
 output/documents/*
@@ -16,6 +24,9 @@ output/working/*
 # Glossary data (persistent, but user-specific)
 glossary/*
 !glossary/.gitkeep
+
+# User-specific configuration (created via /setup onboarding)
+config.json
 
 # Design document (internal reference only)
 legal-doc-translator-agent-design.md
