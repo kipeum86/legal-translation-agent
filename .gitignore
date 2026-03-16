@@ -1,11 +1,20 @@
 # Source documents (may contain confidential legal documents)
-input/
+input/*
+!input/.gitkeep
 
 # User-managed Library assets (confidential)
-library/
+library/*
+!library/.gitkeep
 
 # Output artifacts
-output/
+output/documents/*
+!output/documents/.gitkeep
+output/working/*
+!output/working/.gitkeep
+
+# Glossary data (persistent, but user-specific)
+glossary/*
+!glossary/.gitkeep
 
 # Design document (internal reference only)
 legal-doc-translator-agent-design.md
