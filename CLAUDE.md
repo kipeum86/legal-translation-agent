@@ -289,12 +289,16 @@ Save checkpoint.
 
 **Skip condition**: No Library assets for this target language pair → skip with log.
 
-1. Compare translation against Library reference translations
-2. Check style guide compliance
-3. Final Library glossary consistency check
-4. Auto-correct: term mismatches, register deviations
-5. Flag for user: phrasing preferences
-6. Save `output/working/library-comparison-report.json`
+1. Resolve reference path: `/library/{profile}/references/{src}-{tgt}/`
+2. If folder missing or `target/` empty → skip with log
+3. Parse all files in `target/` → gold-standard reference translations
+4. Parse matching files in `source/` → used for section alignment with current source
+5. Compare current translation against reference targets
+6. Check style guide compliance
+7. Final Library glossary consistency check
+8. Auto-correct: term mismatches, register deviations
+9. Flag for user: phrasing preferences
+10. Save `output/working/library-comparison-report.json`
 
 Save checkpoint.
 
@@ -363,9 +367,34 @@ The Library is **read-only** for this agent. User manages all content.
 ### Asset Types
 | Type | Location | Used At |
 |------|----------|---------|
-| Reference translation | `/library/{profile}/references/` | Step 9 (Hard) |
+| Reference translation | `/library/{profile}/references/{src}-{tgt}/source/`, `target/` | Step 9 (Hard) |
 | Custom glossary | `/library/{profile}/glossaries/` | Step 2 (highest priority) |
 | Style guide | `/library/{profile}/style-guides/` | Steps 3-5, 9-10 |
+
+### Reference File Convention
+
+`references/` 폴더는 언어쌍별 하위 폴더 + source/target 하위 폴더로 구성:
+
+```
+references/
+├── en-ko/
+│   ├── source/          ← 원본 문서 (English)
+│   │   ├── Privacy Policy.docx
+│   │   └── NDA.docx
+│   └── target/          ← 번역본 문서 (Korean, gold-standard)
+│       ├── 개인정보처리방침.docx
+│       └── 비밀유지계약서.docx
+├── ko-en/
+│   ├── source/          ← 원본 문서 (Korean)
+│   └── target/          ← 번역본 문서 (English, gold-standard)
+```
+
+- **폴더명**: `{source_lang}-{target_lang}` (ISO 코드, 소문자)
+- **파일명**: 자유 (제약 없음). 원본 파일명 그대로 사용 가능
+- **파일 포맷**: 제약 없음 (.docx, .pdf, .md 등 원본 포맷 유지)
+- **source/**: 원본 문서 — 섹션 정렬(alignment)용
+- **target/**: 번역본 문서 — 스타일·용어 비교의 gold-standard
+- Step 9에서 현재 번역 job의 `{src}-{tgt}`와 일치하는 폴더만 로드
 
 ### Profile Loading
 When user specifies a Library profile:
@@ -469,6 +498,9 @@ Save checkpoint after EVERY completed step. On session start, check for checkpoi
 │       ├── profile.json
 │       ├── inbox/
 │       ├── references/
+│       │   └── {src}-{tgt}/           # Language-pair folder
+│       │       ├── source/            # Original documents
+│       │       └── target/            # Gold-standard translations
 │       ├── glossaries/
 │       └── style-guides/
 └── .claude/

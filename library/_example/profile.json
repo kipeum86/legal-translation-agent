@@ -2,7 +2,9 @@
   "name": "_example",
   "created": "2026-03-16",
   "description": "Example Library profile — copy this folder and rename to create a new profile",
-  "references": [],
-  "glossaries": [],
-  "style_guides": []
+  "assets": {
+    "references": [],
+    "glossaries": [],
+    "style_guides": []
+  }
 }

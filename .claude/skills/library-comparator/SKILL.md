@@ -9,6 +9,19 @@ Compare current translation against Library reference translations, custom gloss
 
 A Library profile being active is not sufficient — there must be at least one reference translation OR style guide for this specific language pair.
 
+## Reference Loading
+
+1. Resolve path: `/library/{profile}/references/{src}-{tgt}/`
+2. Check `target/` subfolder — list all files (any format: .docx, .pdf, .md)
+3. Parse each target file → gold-standard reference translations for comparison
+4. Optionally load `source/` files → used for section alignment between reference and current source
+5. If `target/` is empty or the language-pair folder is missing → skip condition triggered
+
+**File conventions**:
+- Folder: `{source_lang}-{target_lang}` (ISO codes, lowercase)
+- Filename: no constraints — users may use original filenames
+- Format: no constraints — .docx, .pdf, .md, etc.
+
 ## Capabilities
 
 1. **Reference Translation Comparison** (LLM judgment)
