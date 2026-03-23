@@ -9,7 +9,11 @@ library/*
 library/_example/inbox/*
 !library/_example/inbox/.gitkeep
 library/_example/references/*
-!library/_example/references/.gitkeep
+!library/_example/references/en-ko/
+library/_example/references/en-ko/source/*
+!library/_example/references/en-ko/source/.gitkeep
+library/_example/references/en-ko/target/*
+!library/_example/references/en-ko/target/.gitkeep
 library/_example/glossaries/*
 !library/_example/glossaries/.gitkeep
 library/_example/style-guides/*

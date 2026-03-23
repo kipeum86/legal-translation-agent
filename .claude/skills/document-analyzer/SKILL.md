@@ -20,18 +20,26 @@ Parse source documents to extract text, detect language, build structural invent
    - Copy `.md` or `.txt` files directly to `output/working/source-parsed.md`
    - No script needed — direct file copy
 
-4. **Structural Counting** (`scripts/structural-counter.py`)
+4. **Generic Format Parsing** (`scripts/parse-generic.sh`)
+   - Handles non-core formats: .pptx, .xlsx, .html, .epub, .csv, .json, .xml, .odt, .rtf, etc.
+   - Fallback chain: MarkItDown CLI → pandoc
+   - Guards against .docx/.pdf (redirects to dedicated parsers for better structure preservation)
+   - Usage: `bash scripts/parse-generic.sh <file_path> <output_dir>`
+   - Outputs: `source-parsed.md`
+   - Install: `pip install 'markitdown[all]'`
+
+5. **Structural Counting** (`scripts/structural-counter.py`)
    - Deterministic article/sub-clause/enumerated-item/defined-term/footnote counting
    - Supports 5 languages: EN, KO, ZH-CN, ZH-TW, JA with language-specific patterns
    - Usage: `python3 scripts/structural-counter.py <source-parsed.md> <language_code> <output_path>`
    - Outputs: `structural-inventory.json`
 
-5. **Language Detection** (LLM judgment)
+6. **Language Detection** (LLM judgment)
    - Auto-detect source language from parsed text
    - If confidence < 95%, ask user to confirm
    - Identify document type: EULA, NDA, Privacy Policy, ToS, contract, etc.
 
-6. **Segmentation Decision** (included in structural-counter.py)
+7. **Segmentation Decision** (included in structural-counter.py)
    - Documents ≤ ~8,000 estimated tokens → translate as single unit
    - Documents > ~8,000 tokens → segment by article boundaries
    - Output includes segment plan in structural-inventory.json
@@ -39,9 +47,12 @@ Parse source documents to extract text, detect language, build structural invent
 ## Workflow
 
 ```
-Source file (docx/pdf/md/txt)
+Source file (docx/pdf/md/txt/pptx/xlsx/html/epub/...)
     │
-    ├── parse-docx.sh / parse-pdf.sh / direct copy
+    ├── parse-docx.sh          ← .docx (structure-optimized)
+    ├── parse-pdf.sh           ← .pdf (structure-optimized)
+    ├── parse-generic.sh       ← .pptx/.xlsx/.html/.epub/etc. (MarkItDown → pandoc)
+    ├── direct copy            ← .md/.txt
     │       ↓
     │   source-parsed.md
     │

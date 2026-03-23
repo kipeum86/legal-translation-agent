@@ -44,13 +44,11 @@ ARTICLE_PATTERNS = {
 
 SUB_CLAUSE_PATTERNS = {
     "en": [
-        r"^\s*(?:Section\s+)?\d+\.\d+",             # Section 1.1
-        r"^\s*\(\s*[a-z]\s*\)",                       # (a), (b), (c)
+        r"^\s*(?:Section\s+)?\d+\.\d+",             # Section 1.1 / N.M paragraphs (항)
         r"^\s*\(\s*[ivxlc]+\s*\)",                    # (i), (ii), (iii)
     ],
     "ko": [
         r"^\s*(?:제\s*\d+\s*항|[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])",  # 제X항 or circled numbers
-        r"^\s*(\d+)\.\s",                              # 1. 2. 3.
     ],
     "zh-cn": [
         r"^\s*第\s*[一二三四五六七八九十百零\d]+\s*款",   # 第X款
@@ -68,12 +66,14 @@ SUB_CLAUSE_PATTERNS = {
 
 ENUMERATED_ITEM_PATTERNS = {
     "en": [
+        r"^\s*\(\s*[a-z]\s*\)",                        # (a), (b), (c) — enumerated items (호)
         r"^\s*\(\s*[A-Z]\s*\)",                        # (A), (B), (C)
         r"^\s*\(\s*\d+\s*\)",                          # (1), (2), (3)
         r"^\s*[a-z]\.\s",                              # a. b. c.
     ],
     "ko": [
         r"^\s*(?:제\s*\d+\s*호)",                       # 제X호
+        r"^\s*(\d+)\.\s",                               # 1. 2. 3. (호)
         r"^\s*[가나다라마바사아자차카타파하]\.",            # 가. 나. 다.
         r"^\s*[\(（][가나다라마바사아자차카타파하][\)）]",   # (가) (나) (다)
     ],
@@ -138,13 +138,22 @@ def normalize_language(lang: str) -> str:
     raise ValueError(f"Unsupported language code: {lang}. Supported: en, ko, zh-cn, zh-tw, ja")
 
 
+def strip_markdown(line: str) -> str:
+    """Strip common markdown formatting (bold, italic, headings) for pattern matching."""
+    s = line.strip()
+    s = re.sub(r"\*{1,3}", "", s)   # bold / italic markers
+    s = re.sub(r"^#{1,6}\s+", "", s)  # heading markers
+    return s.strip()
+
+
 def count_matches(text: str, patterns: list[str], per_line: bool = True) -> list[dict]:
     """Count regex matches. Returns list of {line, match} dicts."""
     results = []
     if per_line:
         for i, line in enumerate(text.split("\n"), 1):
+            clean = strip_markdown(line)
             for pattern in patterns:
-                if re.search(pattern, line):
+                if re.search(pattern, clean):
                     results.append({"line": i, "text": line.strip()})
                     break  # One match per line
     else:
@@ -161,8 +170,9 @@ def extract_articles(text: str, lang: str) -> list[dict]:
     lines = text.split("\n")
 
     for i, line in enumerate(lines, 1):
+        clean = strip_markdown(line)
         for pattern in patterns:
-            m = re.search(pattern, line.strip())
+            m = re.search(pattern, clean)
             if m:
                 article_id = m.group(0).strip()
                 articles.append({
@@ -179,8 +189,9 @@ def count_sub_clauses_for_article(text_block: str, lang: str) -> int:
     patterns = SUB_CLAUSE_PATTERNS.get(lang, [])
     count = 0
     for line in text_block.split("\n"):
+        clean = strip_markdown(line)
         for pattern in patterns:
-            if re.search(pattern, line):
+            if re.search(pattern, clean):
                 count += 1
                 break
     return count
@@ -191,8 +202,9 @@ def count_enumerated_items_for_article(text_block: str, lang: str) -> int:
     patterns = ENUMERATED_ITEM_PATTERNS.get(lang, [])
     count = 0
     for line in text_block.split("\n"):
+        clean = strip_markdown(line)
         for pattern in patterns:
-            if re.search(pattern, line):
+            if re.search(pattern, clean):
                 count += 1
                 break
     return count
