@@ -84,7 +84,7 @@ fi
 OUTPUT_FILE="${OUTPUT_DIR}/${FILENAME}.${FORMAT}"
 
 # ─── Assemble combined markdown ──────────────────────────────────────────
-ASSEMBLED=$(mktemp /tmp/assembled-XXXXXX.md)
+ASSEMBLED=$(mktemp "${OUTPUT_DIR}/assembled-XXXXXX.md")
 trap 'rm -f "$ASSEMBLED"' EXIT
 
 # Copy translation body
