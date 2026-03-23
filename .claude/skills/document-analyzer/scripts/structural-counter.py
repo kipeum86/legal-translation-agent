@@ -25,8 +25,8 @@ from collections import OrderedDict
 
 ARTICLE_PATTERNS = {
     "en": [
-        r"^(?:Article|ARTICLE)\s+(\d+)",
-        r"^(?:Section|SECTION)\s+(\d+)",
+        r"^(?:\*{0,2})(?:Article|ARTICLE)\s+(\d+)",
+        r"^(?:\*{0,2})(?:Section|SECTION)\s+(\d+)",
     ],
     "ko": [
         r"^제\s*(\d+)\s*조",
