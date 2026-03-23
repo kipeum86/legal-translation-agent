@@ -177,6 +177,7 @@ On first job, confirm mode:
    - `.docx` → `bash .claude/skills/document-analyzer/scripts/parse-docx.sh <file> output/working`
    - `.pdf` → `bash .claude/skills/document-analyzer/scripts/parse-pdf.sh <file> output/working`
    - `.md` / `.txt` → copy to `output/working/source-parsed.md`
+   - Other formats (`.pptx`, `.xlsx`, `.html`, `.epub`, etc.) → `bash .claude/skills/document-analyzer/scripts/parse-generic.sh <file> output/working`
 2. Auto-detect source language. If confidence < 95%, ask user.
 3. Identify document type (EULA, NDA, Privacy Policy, ToS, contract, etc.)
 4. Run structural counter:
@@ -291,7 +292,7 @@ Save checkpoint.
 
 1. Resolve reference path: `/library/{profile}/references/{src}-{tgt}/`
 2. If folder missing or `target/` empty → skip with log
-3. Parse all files in `target/` → gold-standard reference translations
+3. Parse all files in `target/` → gold-standard reference translations (use `parse-docx.sh`, `parse-pdf.sh`, or `parse-generic.sh` as appropriate)
 4. Parse matching files in `source/` → used for section alignment with current source
 5. Compare current translation against reference targets
 6. Check style guide compliance
@@ -391,7 +392,7 @@ references/
 
 - **폴더명**: `{source_lang}-{target_lang}` (ISO 코드, 소문자)
 - **파일명**: 자유 (제약 없음). 원본 파일명 그대로 사용 가능
-- **파일 포맷**: 제약 없음 (.docx, .pdf, .md 등 원본 포맷 유지)
+- **파일 포맷**: 제약 없음 (.docx, .pdf, .md, .pptx, .xlsx, .html, .epub 등). 비주류 포맷은 MarkItDown(`parse-generic.sh`)으로 파싱
 - **source/**: 원본 문서 — 섹션 정렬(alignment)용
 - **target/**: 번역본 문서 — 스타일·용어 비교의 gold-standard
 - Step 9에서 현재 번역 job의 `{src}-{tgt}`와 일치하는 폴더만 로드
@@ -508,6 +509,25 @@ Save checkpoint after EVERY completed step. On session start, check for checkpoi
     ├── agents/                        # 3 sub-agents
     └── commands/                      # 5 slash commands
 ```
+
+---
+
+## Dependencies
+
+### Required
+| Package | Used By | Purpose |
+|---------|---------|---------|
+| python-docx | `parse-docx.sh`, `file-converter.sh` | DOCX parsing & generation |
+| pymupdf | `parse-pdf.sh` | PDF text extraction |
+| pandoc (CLI) | `parse-docx.sh`, `parse-pdf.sh`, `file-converter.sh` | Format conversion fallback |
+
+### Optional
+| Package | Used By | Purpose |
+|---------|---------|---------|
+| markitdown (`pip install 'markitdown[all]'`) | `parse-generic.sh` | Non-core format support (.pptx, .xlsx, .html, .epub, etc.) |
+| pdftotext / poppler (CLI) | `parse-pdf.sh` | PDF fallback |
+
+MarkItDown is optional — only needed when handling formats beyond .docx/.pdf/.md/.txt. Primary use case: Library reference asset ingestion with diverse file formats.
 
 ---
 

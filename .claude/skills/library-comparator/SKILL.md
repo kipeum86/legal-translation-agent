@@ -12,15 +12,19 @@ A Library profile being active is not sufficient — there must be at least one 
 ## Reference Loading
 
 1. Resolve path: `/library/{profile}/references/{src}-{tgt}/`
-2. Check `target/` subfolder — list all files (any format: .docx, .pdf, .md)
-3. Parse each target file → gold-standard reference translations for comparison
+2. Check `target/` subfolder — list all files (any format: .docx, .pdf, .md, .pptx, .html, etc.)
+3. Parse each target file to markdown using the appropriate parser:
+   - `.docx` → `parse-docx.sh` (structure-optimized)
+   - `.pdf` → `parse-pdf.sh` (structure-optimized)
+   - `.md`, `.txt` → direct read
+   - Other formats → `parse-generic.sh` (MarkItDown → pandoc fallback)
 4. Optionally load `source/` files → used for section alignment between reference and current source
 5. If `target/` is empty or the language-pair folder is missing → skip condition triggered
 
 **File conventions**:
 - Folder: `{source_lang}-{target_lang}` (ISO codes, lowercase)
 - Filename: no constraints — users may use original filenames
-- Format: no constraints — .docx, .pdf, .md, etc.
+- Format: no constraints — .docx, .pdf, .md, .pptx, .xlsx, .html, .epub, etc.
 
 ## Capabilities
 
