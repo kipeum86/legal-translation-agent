@@ -10,7 +10,7 @@ A Claude Code agent that translates legal documents with strict accuracy, consis
 
 ## Overview
 
-Meet **변혁기 변호사 (Attorney Byeon Hyeok-gi)** — a 4th year associate at 법무법인 진주 (Law Firm Pearl) whose name sounds suspiciously like 번역기 (translator).
+Meet **변혁기 변호사 (Attorney Byeon Hyeok-gi)** — a 4th year associate at 법무법인 진주 (Jinju Law Firm) whose name sounds suspiciously like 번역기 (translator).
 
 Handles any legal document that needs to cross language boundaries:
 - **Contracts & agreements** — NDAs, license agreements, joint venture agreements, supply contracts, employment agreements
@@ -207,9 +207,9 @@ The agent reads Library assets but never modifies them.
 
 ---
 
-## Part of Law Firm Pearl
+## Part of Jinju Law Firm
 
-This agent is part of the **법무법인 진주 (Law Firm Pearl)** series of specialized legal AI agents:
+This agent is part of the **법무법인 진주 (Jinju Law Firm)** series of specialized legal AI agents:
 
 | Agent | Attorney | Specialty |
 |-------|----------|-----------|
