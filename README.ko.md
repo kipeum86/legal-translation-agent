@@ -213,4 +213,4 @@ library/
 
 ## 라이선스
 
-법무법인 진주 내부 도구. 외부 배포 불가.
+Apache License 2.0에 따라 배포됩니다. 자세한 내용은 [LICENSE](LICENSE)를 참조하세요.

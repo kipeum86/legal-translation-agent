@@ -225,4 +225,4 @@ This agent is part of the **법무법인 진주 (Jinju Law Firm)** series of spe
 
 ## License
 
-Internal tool for 법무법인 진주. Not for public distribution.
+Licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
