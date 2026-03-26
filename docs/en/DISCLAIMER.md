@@ -55,7 +55,7 @@ If you intend to use this for real legal work with confidential documents:
 
 ## No Warranty
 
-This software is provided "as is", without warranty of any kind, express or implied. The author assumes no liability for any damages arising from the use of this software or its outputs.
+This software is provided "as is", without warranty of any kind, express or implied. See the [Apache 2.0 License](../../LICENSE) for full terms. The author assumes no liability for any damages arising from the use of this software or its outputs.
 
 ## Scope of Responsibility
 

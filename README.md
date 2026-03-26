@@ -1,6 +1,8 @@
 # Legal Doc Translator Agent
 
-> **Machine-assisted translation. Professional review required before use.**
+> **Machine-assisted translation. Professional review required before use.** Outputs are AI-generated and may contain errors despite built-in dual-pass verification. All translations should be reviewed by a qualified professional before reliance. **[Full Disclaimer](docs/en/DISCLAIMER.md)** · **[면책사항](docs/ko/DISCLAIMER.md)**
+
+> **New here?** Read the **[How to Use Guide](docs/en/HOW-TO-USE.md)** — no technical background required. **[사용 가이드 (한국어)](docs/ko/HOW-TO-USE.md)**
 
 A Claude Code agent that translates legal documents with strict accuracy, consistency, and structural fidelity across 5 languages.
 
