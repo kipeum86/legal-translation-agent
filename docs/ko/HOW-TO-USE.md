@@ -49,7 +49,7 @@ git clone https://github.com/kipeum86/legal-translation-agent.git
 
 1. Claude Code 실행
 2. `legal-translation-agent` 폴더 열기
-3. 에이전트가 자동 활성화 — **변혁기 변호사**가 인사합니다 (이름이 번역기랑 비슷한 건 우연입니다... 라고 하면 아무도 안 믿더라고요)
+3. 에이전트가 자동 활성화 — 진주 리걸 오케스트레이터의 **법률 번역 스페셜리스트 변혁기**가 인사합니다 (이름이 번역기랑 비슷한 건 우연입니다... 라고 하면 아무도 안 믿더라고요)
 
 ### 방법 B: 터미널 (CLI)
 

@@ -34,6 +34,7 @@ config.json
 
 # Design document (internal reference only)
 legal-doc-translator-agent-design.md
+docs/notes/naming-transition-guide.md
 
 # OS files
 .DS_Store

@@ -4,7 +4,7 @@
 
 > **New here?** Read the **[How to Use Guide](docs/en/HOW-TO-USE.md)** — no technical background required. **[사용 가이드 (한국어)](docs/ko/HOW-TO-USE.md)**
 
-A Claude Code agent that translates legal documents with strict accuracy, consistency, and structural fidelity across 5 languages.
+A Claude Code specialist agent within **Jinju Legal Orchestrator**, built to translate legal documents with strict accuracy, consistency, and structural fidelity across 5 languages.
 
 **[한국어 README](README.ko.md)**
 
@@ -12,7 +12,7 @@ A Claude Code agent that translates legal documents with strict accuracy, consis
 
 ## Overview
 
-Meet **변혁기 변호사 (Attorney Byeon Hyeok-gi)** — a 4th year associate at 법무법인 진주 (Jinju Law Firm) whose name sounds suspiciously like 번역기 (translator).
+Meet **Legal Translation Specialist Byeon Hyeok-gi (변혁기)** at **Jinju Legal Orchestrator** — whose name sounds suspiciously like 번역기 (translator).
 
 Handles any legal document that needs to cross language boundaries:
 - **Contracts & agreements** — NDAs, license agreements, joint venture agreements, supply contracts, employment agreements
@@ -26,7 +26,7 @@ Handles any legal document that needs to cross language boundaries:
 - **Zero-omission guarantee** — every article, sub-clause, sentence, and defined term is translated
 - **Dual-pass translation** — two independent translation passes merged via comparative synthesis
 - **Jurisdiction-aware terminology** — BGB, UCC, PRC, Taiwan, APPI conventions respected
-- **Persistent glossary** — firm-wide translation memory that grows with every job
+- **Persistent glossary** — system-wide translation memory that grows with every job
 - **Structural verification** — deterministic counting ensures nothing is missed
 
 ### Supported Languages
@@ -149,7 +149,7 @@ The persistent glossary is the agent's core accumulating asset — it grows with
 
 **Hierarchy** (conflict resolution order):
 1. **Library custom glossary** — company-specific, highest priority
-2. **Persistent glossary** — firm-wide, auto-accumulated
+2. **Persistent glossary** — system-wide, auto-accumulated
 3. **LLM proposal** — when no prior mapping exists
 
 Glossary files are stored in `/glossary/` as JSON, one file per language pair.
@@ -209,20 +209,20 @@ The agent reads Library assets but never modifies them.
 
 ---
 
-## Part of Jinju Law Firm
+## Part of Jinju Legal Orchestrator
 
-This agent is part of the **법무법인 진주 (Jinju Law Firm)** series of specialized legal AI agents:
+This agent is part of **Jinju Legal Orchestrator**, a multi-agent legal workflow system with specialized agents for research, drafting, review, and translation:
 
-| Agent | Attorney | Specialty |
-|-------|----------|-----------|
-| [game-legal-research](https://github.com/kipeum86/game-legal-research) | 심진주 (Sim Jinju) | Game industry law |
-| **[legal-translation-agent](https://github.com/kipeum86/legal-translation-agent)** | **변혁기 (Byeon Hyeok-gi)** | **Legal translation** |
-| [general-legal-research](https://github.com/kipeum86/general-legal-research) | 김재식 (Kim Jaesik) | Legal research |
-| [PIPA-expert](https://github.com/kipeum86/PIPA-expert) | 정보호 (Jeong Bo-ho) | Data privacy law |
-| [GDPR-expert](https://github.com/kipeum86/GDPR-expert) | 김덕배 (Kim De Bruyne) | Data protection law (GDPR) |
-| [contract-review-agent](https://github.com/kipeum86/contract-review-agent) | 고덕수 (Ko Duksoo) | Contract review |
-| [legal-writing-agent](https://github.com/kipeum86/legal-writing-agent) | 한석봉 (Han Seokbong) | Legal writing |
-| [second-review-agent](https://github.com/kipeum86/second-review-agent) | 반성문 (Ban Seong-mun) | Quality review (Partner) |
+| Agent | Specialist | Role |
+|-------|------------|------|
+| [game-legal-research](https://github.com/kipeum86/game-legal-research) | 심진주 (Sim Jinju) | Game industry specialist |
+| **[legal-translation-agent](https://github.com/kipeum86/legal-translation-agent)** | **변혁기 (Byeon Hyeok-gi)** | **Legal translation specialist** |
+| [general-legal-research](https://github.com/kipeum86/general-legal-research) | 김재식 (Kim Jaesik) | Research specialist |
+| [PIPA-expert](https://github.com/kipeum86/PIPA-expert) | 정보호 (Jeong Bo-ho) | Privacy specialist |
+| [GDPR-expert](https://github.com/kipeum86/GDPR-expert) | 김덕배 (Kim De Bruyne) | Data protection specialist |
+| [contract-review-agent](https://github.com/kipeum86/contract-review-agent) | 고덕수 (Ko Duksoo) | Contract specialist |
+| [legal-writing-agent](https://github.com/kipeum86/legal-writing-agent) | 한석봉 (Han Seokbong) | Legal drafting specialist |
+| [second-review-agent](https://github.com/kipeum86/second-review-agent) | 반성문 (Ban Seong-mun) | Senior review specialist |
 
 ## License
 
