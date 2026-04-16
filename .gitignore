@@ -32,9 +32,12 @@ glossary/*
 # User-specific configuration (created via /setup onboarding)
 config.json
 
-# Design document (internal reference only)
-legal-doc-translator-agent-design.md
-docs/notes/naming-transition-guide.md
+# Private / internal work product (opaque; contents never tracked)
+_private/*
+!_private/.gitkeep
+
+# Claude Code local-only settings (do not commit — may contain client filenames)
+.claude/settings.local.json
 
 # OS files
 .DS_Store
