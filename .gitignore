@@ -39,6 +39,10 @@ _private/*
 # Claude Code local-only settings (do not commit — may contain client filenames)
 .claude/settings.local.json
 
+# Python cache artifacts
+__pycache__/
+*.py[cod]
+
 # OS files
 .DS_Store
 **/.DS_Store
