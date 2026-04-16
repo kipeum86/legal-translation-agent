@@ -37,6 +37,14 @@ fi
 
 mkdir -p "$OUTPUT_DIR"
 
+run_sanitizer() {
+    local sanitize_script
+    sanitize_script="$(cd "$(dirname "$0")/../../ingest-sanitizer/scripts" && pwd)/sanitize.py"
+    if [ -f "$sanitize_script" ]; then
+        python3 "$sanitize_script" "$OUTPUT_FILE" "$OUTPUT_FILE" 2>&1 | sed 's/^/  /' || true
+    fi
+}
+
 EXT="${INPUT_FILE##*.}"
 EXT_LOWER=$(echo "$EXT" | tr '[:upper:]' '[:lower:]')
 
@@ -53,6 +61,7 @@ case "$EXT_LOWER" in
     md|txt)
         echo "Info: .md/.txt files can be copied directly. Copying as-is."
         cp "$INPUT_FILE" "$OUTPUT_FILE"
+        run_sanitizer
         LINES=$(wc -l < "$OUTPUT_FILE" | tr -d ' ')
         echo "  Output: $OUTPUT_FILE ($LINES lines)"
         exit 0
@@ -101,6 +110,7 @@ else
 fi
 
 if [ -f "$OUTPUT_FILE" ]; then
+    run_sanitizer
     LINES=$(wc -l < "$OUTPUT_FILE" | tr -d ' ')
     echo "  Output: $OUTPUT_FILE ($LINES lines)"
 else

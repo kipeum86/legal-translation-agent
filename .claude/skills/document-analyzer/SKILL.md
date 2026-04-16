@@ -46,8 +46,8 @@ Parse source documents to extract text, detect language, build structural invent
    - Outputs: `source-parsed.md`
 
 3. **Markdown/TXT Ingestion**
-   - Copy `.md` or `.txt` files directly to `output/working/source-parsed.md`
-   - No script needed — direct file copy
+   - `.md` and `.txt` still flow through `scripts/parse-generic.sh`
+   - Preserves a single ingest path for sanitization + output sidecar generation
 
 4. **Generic Format Parsing** (`scripts/parse-generic.sh`)
    - Handles non-core formats: .pptx, .xlsx, .html, .epub, .csv, .json, .xml, .odt, .rtf, etc.
@@ -57,18 +57,24 @@ Parse source documents to extract text, detect language, build structural invent
    - Outputs: `source-parsed.md`
    - Install: `pip install 'markitdown[all]'`
 
-5. **Structural Counting** (`scripts/structural-counter.py`)
+5. **Ingest Sanitization** (`../ingest-sanitizer/scripts/sanitize.py`)
+   - Runs automatically at the end of every parse script
+   - Wraps prompt-injection patterns (role markers, jailbreak phrases) in `<escape>…</escape>`
+   - Emits `<output>.audit.json` sidecar listing all matches
+   - See `.claude/skills/ingest-sanitizer/SKILL.md`
+
+6. **Structural Counting** (`scripts/structural-counter.py`)
    - Deterministic article/sub-clause/enumerated-item/defined-term/footnote counting
    - Supports 5 languages: EN, KO, ZH-CN, ZH-TW, JA with language-specific patterns
    - Usage: `python3 scripts/structural-counter.py <source-parsed.md> <language_code> <output_path>`
    - Outputs: `structural-inventory.json`
 
-6. **Language Detection** (LLM judgment)
+7. **Language Detection** (LLM judgment)
    - Auto-detect source language from parsed text
    - If confidence < 95%, ask user to confirm
    - Identify document type: EULA, NDA, Privacy Policy, ToS, contract, etc.
 
-7. **Segmentation Decision** (included in structural-counter.py)
+8. **Segmentation Decision** (included in structural-counter.py)
    - Documents ≤ ~8,000 estimated tokens → translate as single unit
    - Documents > ~8,000 tokens → segment by article boundaries
    - Output includes segment plan in structural-inventory.json
@@ -78,12 +84,14 @@ Parse source documents to extract text, detect language, build structural invent
 ```
 Source file (docx/pdf/md/txt/pptx/xlsx/html/epub/...)
     │
-    ├── parse-docx.sh          ← .docx (structure-optimized)
-    ├── parse-pdf.sh           ← .pdf (structure-optimized)
-    ├── parse-generic.sh       ← .pptx/.xlsx/.html/.epub/etc. (MarkItDown → pandoc)
-    ├── direct copy            ← .md/.txt
+    ├── parse-docx.sh          ← .docx
+    ├── parse-pdf.sh           ← .pdf
+    ├── parse-generic.sh       ← .pptx/.xlsx/.html/.epub/etc.
+    ├── direct copy            ← .md/.txt (still routes through parse-generic.sh)
     │       ↓
-    │   source-parsed.md
+    │   [sanitize.py — wraps injection patterns in <escape>...</escape>]
+    │       ↓
+    │   source-parsed.md  +  source-parsed.md.audit.json
     │
     └── structural-counter.py
             ↓

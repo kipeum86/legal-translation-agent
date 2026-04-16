@@ -30,6 +30,14 @@ fi
 
 mkdir -p "$OUTPUT_DIR"
 
+run_sanitizer() {
+    local sanitize_script
+    sanitize_script="$(cd "$(dirname "$0")/../../ingest-sanitizer/scripts" && pwd)/sanitize.py"
+    if [ -f "$sanitize_script" ]; then
+        python3 "$sanitize_script" "$OUTPUT_FILE" "$OUTPUT_FILE" 2>&1 | sed 's/^/  /' || true
+    fi
+}
+
 # ─── Method 1: python-docx ───────────────────────────────────────────────
 try_python_docx() {
     python3 -c "
@@ -129,6 +137,7 @@ else
 fi
 
 if [ -f "$OUTPUT_FILE" ]; then
+    run_sanitizer
     LINES=$(wc -l < "$OUTPUT_FILE" | tr -d ' ')
     echo "  Output: $OUTPUT_FILE ($LINES lines)"
 else
