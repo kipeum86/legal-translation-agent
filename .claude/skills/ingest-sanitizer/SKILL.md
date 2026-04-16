@@ -23,6 +23,20 @@ so they are less likely to mistake it for system-level instructions.
    - Writes `<output_file>` (sanitized) + `<output_file>.audit.json` (sidecar)
    - Non-zero exit only on I/O errors — presence of matches is not a failure
 
+#### Manual verification workflow
+
+When you receive a new Library reference or a source document from an
+untrusted party, run:
+
+```bash
+python3 .claude/skills/ingest-sanitizer/scripts/sanitize.py <file> /tmp/scan-out.md
+cat /tmp/scan-out.md.audit.json | python3 -m json.tool
+```
+
+If `match_count > 0`, open `/tmp/scan-out.md` and inspect the wrapped
+regions. The content is still loadable by the pipeline — the wrapper
+just flags it.
+
 3. **Pattern coverage**
    - EN + KO + ZH + JA
    - Role markers: `[SYSTEM]`, `<|system|>`, `<role>…</role>`, `<<admin>>`, `###SYSTEM###`
