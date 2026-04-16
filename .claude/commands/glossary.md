@@ -1,3 +1,6 @@
+Path note: Any `input/`, `output/`, `library/`, `glossary/`, or `_private/`
+path below means the matching directory inside `${LEGAL_TRANSLATION_PRIVATE_DIR}`.
+
 Manage persistent glossaries.
 
 Execute WF3 — Glossary Management:

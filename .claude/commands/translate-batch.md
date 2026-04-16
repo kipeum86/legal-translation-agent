@@ -1,3 +1,6 @@
+Path note: Any `input/`, `output/`, `library/`, `glossary/`, or `_private/`
+path below means the matching directory inside `${LEGAL_TRANSLATION_PRIVATE_DIR}`.
+
 Translate multiple documents in the input folder as a batch.
 
 Execute WF4 — Batch Translation Pipeline:

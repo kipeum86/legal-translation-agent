@@ -70,16 +70,28 @@ claude
 
 설정은 `config.json`에 저장됩니다. `/setup`으로 언제든 재설정 가능합니다.
 
+### 프라이빗 데이터 위치
+
+원문 문서, 출력물, 비공개 Library 자산, 용어집, 내부 노트는 이제
+리포지토리 바깥의 `$LEGAL_TRANSLATION_PRIVATE_DIR`에 보관합니다.
+
+```bash
+export LEGAL_TRANSLATION_PRIVATE_DIR="$HOME/legal-translation-private"
+mkdir -p "$LEGAL_TRANSLATION_PRIVATE_DIR"/{input,output/documents,output/working,library,glossary,_private}
+```
+
+자세한 설정: [PRIVATE-DIR-SETUP.md](./PRIVATE-DIR-SETUP.md)
+
 ---
 
 ## 문서 번역하기
 
 ### 빠른 시작
 
-1. 문서를 `input/` 폴더에 넣습니다
+1. 문서를 `${LEGAL_TRANSLATION_PRIVATE_DIR}/input/`에 넣습니다
 2. 에이전트에게 알려줍니다:
 
-> "input 폴더에 있는 계약서 한국어로 번역해줘"
+> "${LEGAL_TRANSLATION_PRIVATE_DIR}/input 에 있는 계약서 한국어로 번역해줘"
 
 또는:
 
@@ -148,7 +160,7 @@ claude
 
 ### 작동 방식
 
-- 각 작업에서 추출된 용어가 `/glossary/glossary_{src}_{tgt}.json`에 저장됩니다
+- 각 작업에서 추출된 용어가 `${LEGAL_TRANSLATION_PRIVATE_DIR}/glossary/glossary_{src}_{tgt}.json`에 저장됩니다
 - 같은 언어쌍의 다음 번역 시 해당 용어가 자동으로 로드됩니다
 - 용어집은 모든 번역에서 **일관된 용어**를 보장합니다
 
@@ -182,8 +194,8 @@ Library는 특정 클라이언트나 프로젝트를 위한 **골드스탠다드
 
 ### Library 구조
 
-```
-library/
+```text
+${LEGAL_TRANSLATION_PRIVATE_DIR}/library/
 └── {프로필명}/
     ├── profile.json
     ├── inbox/              ← 새 파일을 여기에 넣고 ingest
@@ -209,8 +221,8 @@ library/
 
 참조 파일(DOCX, PDF, MD, TXT, PPTX, XLSX, HTML, EPUB 등)을 Library 프로필의 inbox에 넣습니다:
 
-```
-library/{프로필명}/inbox/
+```text
+${LEGAL_TRANSLATION_PRIVATE_DIR}/library/{프로필명}/inbox/
 ```
 
 #### Step 2: Ingest 실행

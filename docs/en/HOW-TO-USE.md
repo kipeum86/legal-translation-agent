@@ -70,16 +70,29 @@ On your first session, the agent runs a brief **onboarding interview** (`/setup`
 
 Settings are saved to `config.json`. Re-run anytime with `/setup`.
 
+### Private Data Location
+
+Source documents, outputs, private Library assets, glossaries, and
+internal notes now live outside the repo at
+`$LEGAL_TRANSLATION_PRIVATE_DIR`.
+
+```bash
+export LEGAL_TRANSLATION_PRIVATE_DIR="$HOME/legal-translation-private"
+mkdir -p "$LEGAL_TRANSLATION_PRIVATE_DIR"/{input,output/documents,output/working,library,glossary,_private}
+```
+
+Detailed setup: [PRIVATE-DIR-SETUP.md](./PRIVATE-DIR-SETUP.md)
+
 ---
 
 ## Translating a Document
 
 ### Quick Start
 
-1. Place your document in the `input/` folder
+1. Place your document in `${LEGAL_TRANSLATION_PRIVATE_DIR}/input/`
 2. Tell the agent:
 
-> "input 폴더에 있는 계약서 한국어로 번역해줘"
+> "${LEGAL_TRANSLATION_PRIVATE_DIR}/input 에 있는 계약서 한국어로 번역해줘"
 
 or:
 
@@ -148,7 +161,7 @@ The agent maintains a **persistent glossary** that grows with every translation 
 
 ### How It Works
 
-- Terms extracted during each job are saved to `/glossary/glossary_{src}_{tgt}.json`
+- Terms extracted during each job are saved to `${LEGAL_TRANSLATION_PRIVATE_DIR}/glossary/glossary_{src}_{tgt}.json`
 - Next time you translate the same language pair, those terms are automatically loaded
 - The glossary ensures **consistent terminology** across all your translations
 
@@ -182,8 +195,8 @@ The Library stores **gold-standard reference translations**, custom glossaries, 
 
 ### Library Structure
 
-```
-library/
+```text
+$LEGAL_TRANSLATION_PRIVATE_DIR/library/
 └── {profile-name}/
     ├── profile.json
     ├── inbox/              ← Drop new files here for ingest
@@ -209,8 +222,8 @@ The **ingest** system helps you organize reference materials into your Library:
 
 Place any reference file (DOCX, PDF, MD, TXT, PPTX, XLSX, HTML, EPUB, etc.) into your Library profile's inbox:
 
-```
-library/{profile-name}/inbox/
+```text
+${LEGAL_TRANSLATION_PRIVATE_DIR}/library/{profile-name}/inbox/
 ```
 
 #### Step 2: Run ingest

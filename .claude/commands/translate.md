@@ -1,3 +1,6 @@
+Path note: Any `input/`, `output/`, `library/`, `glossary/`, or `_private/`
+path below means the matching directory inside `${LEGAL_TRANSLATION_PRIVATE_DIR}`.
+
 Translate the document(s) in the input folder.
 
 Execute WF1 — Document Translation Pipeline:

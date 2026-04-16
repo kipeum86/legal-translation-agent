@@ -1,5 +1,8 @@
 # ingest-sanitizer Skill
 
+> Path note: Any `input/`, `output/`, `library/`, `glossary/`, or `_private/`
+> path below means the matching directory inside `${LEGAL_TRANSLATION_PRIVATE_DIR}`.
+
 Post-ingest / post-fetch scanner that wraps prompt-injection patterns in
 `<escape>…</escape>` and writes an audit JSON sidecar. Called by every
 document-conversion script and available as a standalone CLI.
@@ -48,8 +51,8 @@ just flags it.
 
 ```json
 {
-  "source": "output/working/source-parsed.md",
-  "output": "output/working/source-parsed.md",
+  "source": "${LEGAL_TRANSLATION_PRIVATE_DIR}/output/working/source-parsed.md",
+  "output": "${LEGAL_TRANSLATION_PRIVATE_DIR}/output/working/source-parsed.md",
   "match_count": 5,
   "matches": [
     {"pattern_id": "role.bracket.en", "match": "[SYSTEM]", "line": 7, "column": 0, "lang": "en"},

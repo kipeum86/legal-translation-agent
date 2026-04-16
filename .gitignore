@@ -1,8 +1,5 @@
-# Source documents (may contain confidential legal documents)
-input/*
-!input/.gitkeep
-
-# User-managed Library assets (confidential)
+# User-managed Library example scaffolding stays in the repo.
+# Real user data now lives outside the repo at $LEGAL_TRANSLATION_PRIVATE_DIR.
 library/*
 !library/.gitkeep
 !library/_example/
@@ -19,25 +16,22 @@ library/_example/glossaries/*
 library/_example/style-guides/*
 !library/_example/style-guides/.gitkeep
 
-# Output artifacts
-output/documents/*
-!output/documents/.gitkeep
-output/working/*
-!output/working/.gitkeep
-
-# Glossary data (persistent, but user-specific)
-glossary/*
-!glossary/.gitkeep
+# Belt-and-suspenders guard: if someone recreates private data dirs in the repo,
+# keep Git from tracking them.
+input/
+output/
+glossary/
+_private/
 
 # User-specific configuration (created via /setup onboarding)
 config.json
 
-# Private / internal work product (opaque; contents never tracked)
-_private/*
-!_private/.gitkeep
-
 # Claude Code local-only settings (do not commit — may contain client filenames)
 .claude/settings.local.json
+
+# Env file (never commit real values)
+.env
+!.env.example
 
 # Python cache artifacts
 __pycache__/

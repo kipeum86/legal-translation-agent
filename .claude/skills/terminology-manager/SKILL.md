@@ -1,5 +1,8 @@
 # terminology-manager Skill
 
+> Path note: Any `input/`, `output/`, `library/`, `glossary/`, or `_private/`
+> path below means the matching directory inside `${LEGAL_TRANSLATION_PRIVATE_DIR}`.
+
 Extract defined terms, manage glossary hierarchy, assemble working glossaries, and persist glossary after translation.
 
 ## Capabilities

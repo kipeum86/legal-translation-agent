@@ -518,26 +518,42 @@ Save checkpoint after EVERY completed step. On session start, check for checkpoi
 ```
 /project-root
 ├── CLAUDE.md                          # This file (orchestrator)
-├── input/                             # Source documents (gitignored)
-├── output/
-│   ├── documents/                     # Final translated documents
-│   └── working/                       # Intermediate artifacts (gitignored)
-├── glossary/                          # Persistent glossary store
-├── library/                           # User-managed assets (gitignored)
-│   └── {profile-name}/
-│       ├── profile.json
-│       ├── inbox/
-│       ├── references/
-│       │   └── {src}-{tgt}/           # Language-pair folder
-│       │       ├── source/            # Original documents
-│       │       └── target/            # Gold-standard translations
-│       ├── glossaries/
-│       └── style-guides/
+├── .env.example                       # Private-dir env var example
+├── docs/                              # User docs + setup guides
+├── library/                           # Public example scaffolding only
+│   └── _example/
 └── .claude/
     ├── skills/                        # 7 skills
     ├── agents/                        # 3 sub-agents
     └── commands/                      # 5 slash commands
 ```
+
+### Private Directory (outside repo)
+
+All user-data directories live outside the repo at
+`${LEGAL_TRANSLATION_PRIVATE_DIR}`. Set this environment variable
+before running any translation command.
+
+| Inside `${LEGAL_TRANSLATION_PRIVATE_DIR}/` | Purpose |
+|---|---|
+| `input/` | Source documents |
+| `output/documents/` | Final translated documents |
+| `output/working/` | Intermediate artifacts (checkpoint, pass-a/b, synthesis, etc.) |
+| `library/` | User-managed references, glossaries, style guides |
+| `glossary/` | Persistent glossary store |
+| `_private/` | Internal work product (design doc, notes) |
+
+Default: `$HOME/legal-translation-private`. Set in your shell rc:
+
+```bash
+export LEGAL_TRANSLATION_PRIVATE_DIR="$HOME/legal-translation-private"
+```
+
+Every path in this CLAUDE.md and every skill/agent doc that refers to
+`input/`, `output/`, `library/`, `glossary/`, or `_private/` means the
+corresponding directory inside `${LEGAL_TRANSLATION_PRIVATE_DIR}`.
+Do not create those directories inside the repo tree. See
+`docs/en/PRIVATE-DIR-SETUP.md` or `docs/ko/PRIVATE-DIR-SETUP.md`.
 
 ---
 

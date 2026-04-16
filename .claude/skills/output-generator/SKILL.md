@@ -1,5 +1,8 @@
 # output-generator Skill
 
+> Path note: Any `input/`, `output/`, `library/`, `glossary/`, or `_private/`
+> path below means the matching directory inside `${LEGAL_TRANSLATION_PRIVATE_DIR}`.
+
 Assemble final translation document with appendices and convert to the user's chosen output format.
 
 ## Capabilities
