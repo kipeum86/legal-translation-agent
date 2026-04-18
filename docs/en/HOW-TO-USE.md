@@ -49,7 +49,7 @@ git clone https://github.com/kipeum86/legal-translation-agent.git
 
 1. Open Claude Code
 2. Open the `legal-translation-agent` folder
-3. The agent activates automatically — you'll meet **Legal Translation Specialist Byeon Hyeok-gi (변혁기)** from Jinju Legal Orchestrator, whose name sounds suspiciously like 번역기 (translator)
+3. The agent activates automatically — you'll be working with the **Legal Translation Specialist** from **KP Legal Orchestrator**
 
 ### Option B: Terminal (CLI)
 

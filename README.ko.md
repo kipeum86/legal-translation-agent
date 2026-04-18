@@ -4,13 +4,13 @@
 
 > **처음이신가요?** **[사용 가이드](docs/ko/HOW-TO-USE.md)**를 읽어보세요 — 기술 배경 없이도 사용할 수 있습니다. **[How to Use (English)](docs/en/HOW-TO-USE.md)**
 
-**진주 리걸 오케스트레이터 (Jinju Legal Orchestrator)** 안에서 작동하는 Claude Code 스페셜리스트 에이전트로, 5개 언어 간 법률문서를 엄밀한 정확성, 일관성, 구조적 충실도로 번역합니다.
+**KP Legal Orchestrator** 안에서 작동하는 Claude Code 스페셜리스트 에이전트로, 5개 언어 간 법률문서를 엄밀한 정확성, 일관성, 구조적 충실도로 번역합니다.
 
 ---
 
 ## 개요
 
-**법률 번역 스페셜리스트 변혁기** — 진주 리걸 오케스트레이터에서 다국어 법률문서 번역을 맡습니다. 이름이 번역기(翻譯機)랑 비슷하다는 건 우연의 일치입니다.
+이 저장소는 **KP Legal Orchestrator**의 **법률 번역 스페셜리스트**를 패키징합니다.
 
 언어 장벽을 넘어야 하는 모든 법률문서를 다룹니다:
 - **계약서 전반** — NDA, 라이선스 계약, 합작투자 계약, 공급 계약, 근로 계약
@@ -197,20 +197,20 @@ library/
 
 ---
 
-## 진주 리걸 오케스트레이터 (Jinju Legal Orchestrator)
+## KP Legal Orchestrator
 
-**진주 리걸 오케스트레이터**를 구성하는 전문 법률 AI 에이전트 시리즈:
+**KP Legal Orchestrator**를 구성하는 전문 법률 AI 에이전트 시리즈:
 
-| 에이전트 | 스페셜리스트 | 역할 |
-|---------|--------------|------|
-| [game-legal-research](https://github.com/kipeum86/game-legal-research) | 심진주 | 게임 산업법 스페셜리스트 |
-| **[legal-translation-agent](https://github.com/kipeum86/legal-translation-agent)** | **변혁기** | **법률 번역 스페셜리스트** |
-| [general-legal-research](https://github.com/kipeum86/general-legal-research) | 김재식 | 리서치 스페셜리스트 |
-| [PIPA-expert](https://github.com/kipeum86/PIPA-expert) | 정보호 | 개인정보 스페셜리스트 |
-| [GDPR-expert](https://github.com/kipeum86/GDPR-expert) | 김덕배 | 데이터 보호 스페셜리스트 |
-| [contract-review-agent](https://github.com/kipeum86/contract-review-agent) | 고덕수 | 계약 스페셜리스트 |
-| [legal-writing-agent](https://github.com/kipeum86/legal-writing-agent) | 한석봉 | 법률 드래프팅 스페셜리스트 |
-| [second-review-agent](https://github.com/kipeum86/second-review-agent) | 반성문 | 시니어 리뷰 스페셜리스트 |
+| 에이전트 | 공개 역할명 | 담당 영역 |
+|---------|-------------|----------|
+| [game-legal-research](https://github.com/kipeum86/game-legal-research) | 게임 산업법 스페셜리스트 | 게임 산업법 리서치 |
+| **[legal-translation-agent](https://github.com/kipeum86/legal-translation-agent)** | **법률 번역 스페셜리스트** | **다국어 법률문서 번역** |
+| [general-legal-research](https://github.com/kipeum86/general-legal-research) | 리서치 스페셜리스트 | 일반 법률 리서치 |
+| [PIPA-expert](https://github.com/kipeum86/PIPA-expert) | 개인정보 스페셜리스트 | 국내 개인정보 컴플라이언스 |
+| [GDPR-expert](https://github.com/kipeum86/GDPR-expert) | 데이터 보호 스페셜리스트 | EU 데이터 보호 컴플라이언스 |
+| [contract-review-agent](https://github.com/kipeum86/contract-review-agent) | 계약 스페셜리스트 | 계약 검토 |
+| [legal-writing-agent](https://github.com/kipeum86/legal-writing-agent) | 법률 드래프팅 스페셜리스트 | 법률 문서 작성 |
+| [second-review-agent](https://github.com/kipeum86/second-review-agent) | 시니어 리뷰 스페셜리스트 | 2차 법률 검토 |
 
 ## 라이선스
 

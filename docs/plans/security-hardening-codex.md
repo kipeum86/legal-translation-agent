@@ -94,7 +94,7 @@ Expected: `.gitignore` hits on lines 36–37, both `test -f` succeed, both trust
 <body explaining the "why" in one or two sentences>
 ```
 
-Examples in recent history: `Align public-facing naming with Jinju Legal Orchestrator`, `Add Apache 2.0 license …`. Use imperative verbs and keep titles ≤70 chars.
+Examples in recent history: `Align public-facing naming with KP Legal Orchestrator`, `Add Apache 2.0 license …`. Use imperative verbs and keep titles ≤70 chars.
 
 ---
 

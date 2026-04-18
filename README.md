@@ -4,7 +4,7 @@
 
 > **New here?** Read the **[How to Use Guide](docs/en/HOW-TO-USE.md)** — no technical background required. **[사용 가이드 (한국어)](docs/ko/HOW-TO-USE.md)**
 
-A Claude Code specialist agent within **Jinju Legal Orchestrator**, built to translate legal documents with strict accuracy, consistency, and structural fidelity across 5 languages.
+A Claude Code specialist agent within **KP Legal Orchestrator**, built to translate legal documents with strict accuracy, consistency, and structural fidelity across 5 languages.
 
 **[한국어 README](README.ko.md)**
 
@@ -12,7 +12,7 @@ A Claude Code specialist agent within **Jinju Legal Orchestrator**, built to tra
 
 ## Overview
 
-Meet **Legal Translation Specialist Byeon Hyeok-gi (변혁기)** at **Jinju Legal Orchestrator** — whose name sounds suspiciously like 번역기 (translator).
+This repository packages the **Legal Translation Specialist** for **KP Legal Orchestrator**.
 
 Handles any legal document that needs to cross language boundaries:
 - **Contracts & agreements** — NDAs, license agreements, joint venture agreements, supply contracts, employment agreements
@@ -209,20 +209,20 @@ The agent reads Library assets but never modifies them.
 
 ---
 
-## Part of Jinju Legal Orchestrator
+## Part of KP Legal Orchestrator
 
-This agent is part of **Jinju Legal Orchestrator**, a multi-agent legal workflow system with specialized agents for research, drafting, review, and translation:
+This agent is part of **KP Legal Orchestrator**, a multi-agent legal workflow system with specialized agents for research, drafting, review, and translation:
 
-| Agent | Specialist | Role |
-|-------|------------|------|
-| [game-legal-research](https://github.com/kipeum86/game-legal-research) | 심진주 (Sim Jinju) | Game industry specialist |
-| **[legal-translation-agent](https://github.com/kipeum86/legal-translation-agent)** | **변혁기 (Byeon Hyeok-gi)** | **Legal translation specialist** |
-| [general-legal-research](https://github.com/kipeum86/general-legal-research) | 김재식 (Kim Jaesik) | Research specialist |
-| [PIPA-expert](https://github.com/kipeum86/PIPA-expert) | 정보호 (Jeong Bo-ho) | Privacy specialist |
-| [GDPR-expert](https://github.com/kipeum86/GDPR-expert) | 김덕배 (Kim De Bruyne) | Data protection specialist |
-| [contract-review-agent](https://github.com/kipeum86/contract-review-agent) | 고덕수 (Ko Duksoo) | Contract specialist |
-| [legal-writing-agent](https://github.com/kipeum86/legal-writing-agent) | 한석봉 (Han Seokbong) | Legal drafting specialist |
-| [second-review-agent](https://github.com/kipeum86/second-review-agent) | 반성문 (Ban Seong-mun) | Senior review specialist |
+| Agent | Public Role | Focus |
+|-------|-------------|-------|
+| [game-legal-research](https://github.com/kipeum86/game-legal-research) | Game Industry Specialist | Game industry law |
+| **[legal-translation-agent](https://github.com/kipeum86/legal-translation-agent)** | **Legal Translation Specialist** | **Multilingual legal document translation** |
+| [general-legal-research](https://github.com/kipeum86/general-legal-research) | Research Specialist | General legal research |
+| [PIPA-expert](https://github.com/kipeum86/PIPA-expert) | Privacy Specialist | Korean privacy compliance |
+| [GDPR-expert](https://github.com/kipeum86/GDPR-expert) | Data Protection Specialist | EU data protection compliance |
+| [contract-review-agent](https://github.com/kipeum86/contract-review-agent) | Contract Specialist | Contract review |
+| [legal-writing-agent](https://github.com/kipeum86/legal-writing-agent) | Legal Drafting Specialist | Legal drafting |
+| [second-review-agent](https://github.com/kipeum86/second-review-agent) | Senior Review Specialist | Second-level legal review |
 
 ## License
 
