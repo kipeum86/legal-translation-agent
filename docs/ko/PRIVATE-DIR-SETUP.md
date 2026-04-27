@@ -31,3 +31,16 @@ $LEGAL_TRANSLATION_PRIVATE_DIR/
 원문 법률 문서와 자체 용어집은 기밀 자료입니다. 리포지토리 바깥에
 보관함으로써 실수로 `git add --force`를 실행하거나 잘못된 브랜치를
 푸시했을 때 유출될 가능성을 원천 차단합니다.
+
+## 기존 repo-root 데이터 이전
+
+먼저 dry-run으로 이동 대상을 확인합니다.
+
+```bash
+python3 .claude/scripts/migrate-private-data.py --dry-run
+```
+
+이 스크립트는 `$LEGAL_TRANSLATION_PRIVATE_DIR/_private/migration-manifests/`
+아래에 migration manifest를 남깁니다. `--apply`로 실제 이동하면 source와
+target inventory 및 sha256 checksum을 함께 기록합니다. 공개 예시
+스캐폴딩인 `library/_example`은 이동하지 않습니다.

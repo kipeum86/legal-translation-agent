@@ -43,14 +43,15 @@ All 5 languages support bidirectional translation.
 
 ---
 
-## Two Operating Modes
+## Three Operating Modes
 
 | Mode | Pipeline | Cost | Use Case |
 |------|----------|------|----------|
-| **Normal** | Dual-pass → synthesis → structural verification | ~2.5x | Standard documents |
+| **Fast** | Single draft → deterministic structure/glossary checks | ~1x | Internal drafts only |
+| **Normal** | Differentiated dual-pass → synthesis → structural verification | ~2.5x | Standard documents |
 | **Hard** | Normal + back-translation + Library comparison + editorial polish | ~5-6x | Publication-grade, high-stakes documents |
 
-Hard mode is a strict superset of Normal — it adds verification layers, never removes them.
+Fast output must be treated as draft / internal review only. Hard mode is a strict superset of Normal — it adds verification layers, never removes them.
 
 ---
 
@@ -59,10 +60,12 @@ Hard mode is a strict superset of Normal — it adds verification layers, never 
 ### 1. Place your document
 
 ```bash
-cp your-document.docx input/
+export LEGAL_TRANSLATION_PRIVATE_DIR="$HOME/legal-translation-private"
+mkdir -p "$LEGAL_TRANSLATION_PRIVATE_DIR"/{input,output/documents,output/working,library,glossary,_private}
+cp your-document.docx "$LEGAL_TRANSLATION_PRIVATE_DIR/input/"
 ```
 
-Supported formats: `.docx`, `.pdf`, `.md`, `.txt`
+Supported core formats: `.docx`, `.pdf`, `.md`, `.txt`
 
 ### 2. Run translation
 
@@ -77,7 +80,7 @@ The agent will ask for:
 
 ### 3. Review output
 
-Final translations are saved to `output/documents/` with the naming convention:
+Final translations are saved to `${LEGAL_TRANSLATION_PRIVATE_DIR}/output/documents/` with the naming convention:
 ```
 {date}_{doctype}_{src}-to-{tgt}_{mode}_v{N}.{ext}
 ```
@@ -125,7 +128,7 @@ Hard mode adds Steps 8-10: back-translation verification, Library reference comp
 
 | Agent | Role | Invocations |
 |-------|------|-------------|
-| `translator` | Produce independent translation passes | Normal: 2, Hard: 3 |
+| `translator` | Produce independent translation passes | Fast: 1, Normal: 2, Hard: 3 |
 | `synthesis-editor` | Merge Pass A + B into final translation | 1 + remediation |
 | `editorial-reviewer` | Native-speaker editorial polish (Hard only) | 1 |
 
@@ -134,12 +137,13 @@ Hard mode adds Steps 8-10: back-translation verification, Library reference comp
 | Skill | Function |
 |-------|----------|
 | `document-analyzer` | Parse files, detect language, build structural inventory |
+| `ingest-sanitizer` | Neutralize prompt-injection patterns in ingested text |
 | `terminology-manager` | Term extraction, glossary hierarchy, merge |
 | `structural-verifier` | Deterministic source vs target count comparison |
 | `back-translation-checker` | Critical segment selection, divergence classification |
 | `library-comparator` | Reference comparison, style guide compliance |
 | `output-generator` | File assembly, format conversion |
-| `quality-checker` | 6-item (Normal) / 10-item (Hard) quality gates |
+| `quality-checker` | Fast draft checks, 6-item Normal gate, 10-item Hard gate |
 
 ---
 
@@ -152,7 +156,7 @@ The persistent glossary is the agent's core accumulating asset — it grows with
 2. **Persistent glossary** — system-wide, auto-accumulated
 3. **LLM proposal** — when no prior mapping exists
 
-Glossary files are stored in `/glossary/` as JSON, one file per language pair.
+Glossary files are stored in `${LEGAL_TRANSLATION_PRIVATE_DIR}/glossary/` as JSON, one file per language pair.
 
 ---
 
@@ -161,7 +165,7 @@ Glossary files are stored in `/glossary/` as JSON, one file per language pair.
 The Library is a user-managed collection of reference translations, custom glossaries, and style guides per company or project.
 
 ```
-library/
+${LEGAL_TRANSLATION_PRIVATE_DIR}/library/
 └── {profile-name}/
     ├── profile.json
     ├── inbox/          # Drop new assets here
@@ -179,8 +183,9 @@ The agent reads Library assets but never modifies them.
 ```
 ├── CLAUDE.md                          # Main orchestrator
 ├── .claude/
-│   ├── skills/                        # 7 specialized skills
+│   ├── skills/                        # 8 specialized skills
 │   │   ├── document-analyzer/
+│   │   ├── ingest-sanitizer/
 │   │   ├── terminology-manager/
 │   │   ├── structural-verifier/
 │   │   ├── back-translation-checker/
@@ -192,11 +197,20 @@ The agent reads Library assets but never modifies them.
 │   │   │   └── references/            # 5 language guides
 │   │   ├── synthesis-editor/
 │   │   └── editorial-reviewer/
-│   └── commands/                      # 5 slash commands
-├── input/                             # Source documents (gitignored)
-├── output/                            # Translation output (gitignored)
+│   └── commands/                      # 6 slash commands
+├── docs/                              # Public user documentation
+└── tests/fixtures/                    # Public regression fixtures
+```
+
+User data lives outside the repository:
+
+```
+${LEGAL_TRANSLATION_PRIVATE_DIR}/
+├── input/                             # Source documents
+├── output/                            # Translation output and working files
 ├── glossary/                          # Persistent glossary store
-└── library/                           # User-managed assets (gitignored)
+├── library/                           # User-managed assets
+└── _private/                          # Local-only notes and migration manifests
 ```
 
 ---
@@ -204,8 +218,18 @@ The agent reads Library assets but never modifies them.
 ## Requirements
 
 - [Claude Code](https://claude.ai/claude-code) CLI
-- Python 3.8+ (for structural counting, glossary merge scripts)
+- Python 3.10+ (for structural counting, glossary merge scripts; CI currently runs Python 3.11)
 - Optional: `pandoc` (for DOCX output), `python-docx` (fallback DOCX parsing)
+
+## Local Checks
+
+Run the same release gate used by CI:
+
+```bash
+python3 .claude/scripts/check.py
+```
+
+It covers the dry-run regression fixture, pytest suites, Python syntax compilation, and shell syntax checks.
 
 ---
 

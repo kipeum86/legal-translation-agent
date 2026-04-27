@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "required": ["overall_status", "checked_terms", "fail_count", "warn_count", "findings"],
+  "properties": {
+    "overall_status": {"type": "string", "enum": ["PASS", "FAIL"]},
+    "checked_terms": {"type": "integer"},
+    "fail_count": {"type": "integer"},
+    "warn_count": {"type": "integer"},
+    "findings": {"type": "array", "items": {"type": "object"}}
+  }
+}

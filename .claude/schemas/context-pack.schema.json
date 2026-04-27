@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "required": ["schema_version", "job_id", "role", "segment_id", "target_lang", "source_span", "glossary_subset", "structure_expectations", "language_rules_subset", "style_rules_subset", "context_token_estimate"],
+  "properties": {
+    "schema_version": {"type": "integer"},
+    "job_id": {"type": "string"},
+    "role": {"type": "string"},
+    "segment_id": {"type": "string"},
+    "target_lang": {"type": "string"},
+    "source_path": {"type": ["string", "null"]},
+    "source_span": {"type": "string"},
+    "source_token_estimate": {"type": "integer"},
+    "glossary_subset": {"type": "array", "items": {"type": "object"}},
+    "structure_expectations": {"type": "object"},
+    "language_rules_subset": {"type": "array", "items": {"type": "object"}},
+    "style_rules_subset": {"type": "array", "items": {"type": "object"}},
+    "context_token_estimate": {"type": "integer"}
+  }
+}

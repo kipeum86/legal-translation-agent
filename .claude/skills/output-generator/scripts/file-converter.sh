@@ -25,7 +25,9 @@
 #   --doctype <type>      — Document type for filename (e.g., eula, nda, tos)
 #   --src <lang>          — Source language code
 #   --tgt <lang>          — Target language code
-#   --mode <normal|hard>  — Translation mode
+#   --mode <fast|normal|hard>  — Translation mode
+#   --job-id <id>         — Translation job id for manifest recording
+#   --step <number>       — Producing step for manifest recording (default: 7)
 
 set -euo pipefail
 
@@ -34,9 +36,17 @@ if [ $# -lt 3 ]; then
     exit 1
 fi
 
-TRANSLATION="$1"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+PATH_RESOLVER="$REPO_ROOT/.claude/scripts/private-path.py"
+
+resolve_path() {
+    python3 "$PATH_RESOLVER" "$1"
+}
+
+TRANSLATION="$(resolve_path "$1")"
 FORMAT="$2"
-OUTPUT_DIR="$3"
+OUTPUT_DIR="$(resolve_path "$3")"
 shift 3
 
 # Defaults
@@ -48,6 +58,8 @@ DOCTYPE="document"
 SRC="src"
 TGT="tgt"
 MODE="normal"
+JOB_ID=""
+STEP="7"
 
 # Parse options
 while [ $# -gt 0 ]; do
@@ -60,9 +72,19 @@ while [ $# -gt 0 ]; do
         --src)        SRC="$2"; shift 2 ;;
         --tgt)        TGT="$2"; shift 2 ;;
         --mode)       MODE="$2"; shift 2 ;;
+        --job-id)     JOB_ID="$2"; shift 2 ;;
+        --step)       STEP="$2"; shift 2 ;;
         *)            echo "Unknown option: $1"; exit 1 ;;
     esac
 done
+
+if [ -n "$GLOSSARY" ]; then
+    GLOSSARY="$(resolve_path "$GLOSSARY")"
+fi
+
+if [ -n "$CHECKLIST" ]; then
+    CHECKLIST="$(resolve_path "$CHECKLIST")"
+fi
 
 if [ ! -f "$TRANSLATION" ]; then
     echo "Error: Translation file not found: $TRANSLATION"
@@ -82,6 +104,8 @@ if [ -z "$FILENAME" ]; then
 fi
 
 OUTPUT_FILE="${OUTPUT_DIR}/${FILENAME}.${FORMAT}"
+ACTUAL_OUTPUT_FILE="$OUTPUT_FILE"
+ACTUAL_FORMAT="$FORMAT"
 
 # ─── Assemble combined markdown ──────────────────────────────────────────
 ASSEMBLED=$(mktemp "${OUTPUT_DIR}/assembled-XXXXXX.md")
@@ -199,6 +223,8 @@ doc.save('$OUTPUT_FILE')
             # Fallback: save as markdown with .md extension instead
             FALLBACK="${OUTPUT_DIR}/${FILENAME}.md"
             cp "$ASSEMBLED" "$FALLBACK"
+            ACTUAL_OUTPUT_FILE="$FALLBACK"
+            ACTUAL_FORMAT="md"
             echo "Warning: pandoc and python-docx not available. Saved as Markdown instead."
             echo "Output (Markdown fallback): $FALLBACK"
         fi
@@ -209,3 +235,41 @@ doc.save('$OUTPUT_FILE')
         exit 1
         ;;
 esac
+
+PROVENANCE_FILE="${ACTUAL_OUTPUT_FILE}.provenance.json"
+PROVENANCE_ARGS=(
+    --translation "$TRANSLATION"
+    --output "$ACTUAL_OUTPUT_FILE"
+    --provenance "$PROVENANCE_FILE"
+    --format "$ACTUAL_FORMAT"
+    --mode "$MODE"
+)
+
+if [ -n "$JOB_ID" ]; then
+    PROVENANCE_ARGS+=(--job-id "$JOB_ID")
+fi
+if [ -n "$GLOSSARY" ]; then
+    PROVENANCE_ARGS+=(--glossary "$GLOSSARY")
+fi
+if [ -n "$CHECKLIST" ]; then
+    PROVENANCE_ARGS+=(--checklist "$CHECKLIST")
+fi
+
+if [ -n "$JOB_ID" ]; then
+    python3 "$REPO_ROOT/.claude/scripts/translate-job.py" record-artifact \
+        --job-id "$JOB_ID" \
+        --step "$STEP" \
+        --name final_output \
+        --path "$ACTUAL_OUTPUT_FILE"
+fi
+
+python3 "$SCRIPT_DIR/write-output-provenance.py" "${PROVENANCE_ARGS[@]}"
+
+if [ -n "$JOB_ID" ]; then
+    python3 "$REPO_ROOT/.claude/scripts/translate-job.py" record-artifact \
+        --job-id "$JOB_ID" \
+        --step "$STEP" \
+        --name output_provenance \
+        --path "$PROVENANCE_FILE" \
+        --schema "$REPO_ROOT/.claude/schemas/output-provenance.schema.json"
+fi

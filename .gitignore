@@ -33,6 +33,29 @@ config.json
 .env
 !.env.example
 
+# Internal audit, review, and planning docs
+docs/plans/
+docs/notes/
+docs/internal/
+docs/audit/
+*.review.md
+*.audit.md
+*.plan.md
+
+# Build and test artifacts
+build/
+dist/
+coverage/
+htmlcov/
+site/
+.next/
+.turbo/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+node_modules/
+
 # Python cache artifacts
 __pycache__/
 *.py[cod]

@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "required": ["source_language", "target_language", "overall_status", "summary", "blocking_failures", "failed_articles", "article_details"],
+  "properties": {
+    "source_language": {"type": "string"},
+    "target_language": {"type": "string"},
+    "overall_status": {"type": "string", "enum": ["PASS", "FAIL"]},
+    "summary": {"type": "object"},
+    "blocking_failures": {"type": "array", "items": {"type": "object"}},
+    "failed_articles": {"type": "array", "items": {"type": "string"}},
+    "article_details": {"type": "array", "items": {"type": "object"}}
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "required": ["segments_selected", "segments_total", "selection_rationale", "findings", "critical_count", "major_count", "minor_count"],
+  "properties": {
+    "segments_selected": {"type": "integer"},
+    "segments_total": {"type": "integer"},
+    "selection_rationale": {"type": "array", "items": {"type": "string"}},
+    "findings": {"type": "array", "items": {"type": "object"}},
+    "critical_count": {"type": "integer"},
+    "major_count": {"type": "integer"},
+    "minor_count": {"type": "integer"}
+  }
+}

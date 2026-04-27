@@ -18,8 +18,9 @@ Assemble final translation document with appendices and convert to the user's ch
 2. **Format Conversion** (`scripts/file-converter.sh`)
    - Convert assembled markdown to: TXT, MD (formatted), or DOCX
    - Fallback: pandoc → python-docx → markdown
+   - Writes `<final-output>.provenance.json` with source artifact hash, final output hash, appendix policy, and manifest freshness checks
    - Usage: `bash scripts/file-converter.sh <translation.md> <format> <output_dir> [options]`
-   - Options: `--glossary`, `--checklist`, `--filename`, `--date`, `--doctype`, `--src`, `--tgt`, `--mode`
+   - Options: `--glossary`, `--checklist`, `--filename`, `--date`, `--doctype`, `--src`, `--tgt`, `--mode`, `--job-id`, `--step`
 
 3. **File Naming**
    - Convention: `{date}_{doctype}_{src}-to-{tgt}_{mode}_v{N}.{ext}`
@@ -40,8 +41,14 @@ synthesized.md + working-glossary.json + verification-checklist.json
     │
     ├── file-converter.sh (for file formats)
     │       ↓
-    └── Final output file in output/documents/
+    └── Final output file in output/documents/ + provenance sidecar
 ```
+
+## Appendix Policy
+
+- The translation body must contain only the translated legal text and approved translator notes.
+- Security findings, parser warnings, structural verification, glossary usage, and Library comparison belong in sidecars or appendices, not inline in the legal body.
+- Final output provenance must identify the exact translation artifact used to generate the delivered file.
 
 ## When to Use
 
@@ -61,3 +68,4 @@ Subsequent jobs:
 Step 7/10 output assembly:
 - `step_7.output_format` → selected format
 - `step_7.output_file` → path to final file
+- `manifest.artifacts` → `final_output`, `output_provenance` when `--job-id` is supplied

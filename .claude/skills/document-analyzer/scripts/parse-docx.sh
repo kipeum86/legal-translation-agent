@@ -11,6 +11,7 @@
 #
 # Outputs:
 #   <output_dir>/source-parsed.md — Full text in markdown format
+#   <output_dir>/source-structure.json — Tables, headers, footers, footnotes, comments, tracked-change flags
 
 set -euo pipefail
 
@@ -19,9 +20,18 @@ if [ $# -lt 2 ]; then
     exit 1
 fi
 
-INPUT_FILE="$1"
-OUTPUT_DIR="$2"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+PATH_RESOLVER="$REPO_ROOT/.claude/scripts/private-path.py"
+
+resolve_path() {
+    python3 "$PATH_RESOLVER" "$1"
+}
+
+INPUT_FILE="$(resolve_path "$1")"
+OUTPUT_DIR="$(resolve_path "$2")"
 OUTPUT_FILE="${OUTPUT_DIR}/source-parsed.md"
+STRUCTURE_FILE="${OUTPUT_DIR}/source-structure.json"
 
 if [ ! -f "$INPUT_FILE" ]; then
     echo "Error: Input file not found: $INPUT_FILE"
@@ -33,12 +43,30 @@ mkdir -p "$OUTPUT_DIR"
 run_sanitizer() {
     local sanitize_script
     sanitize_script="$(cd "$(dirname "$0")/../../ingest-sanitizer/scripts" && pwd)/sanitize.py"
-    if [ -f "$sanitize_script" ]; then
-        python3 "$sanitize_script" "$OUTPUT_FILE" "$OUTPUT_FILE" 2>&1 | sed 's/^/  /' || true
+    if [ ! -f "$sanitize_script" ]; then
+        if [ "${LEGAL_TRANSLATION_ALLOW_UNSANITIZED:-}" = "1" ]; then
+            echo "  Warning: sanitizer not found; continuing because LEGAL_TRANSLATION_ALLOW_UNSANITIZED=1"
+            return 0
+        fi
+        echo "Error: Sanitizer not found: $sanitize_script"
+        exit 1
+    fi
+    if ! python3 "$sanitize_script" "$OUTPUT_FILE" "$OUTPUT_FILE" 2>&1 | sed 's/^/  /'; then
+        if [ "${LEGAL_TRANSLATION_ALLOW_UNSANITIZED:-}" = "1" ]; then
+            echo "  Warning: sanitizer failed; continuing because LEGAL_TRANSLATION_ALLOW_UNSANITIZED=1"
+            return 0
+        fi
+        echo "Error: Sanitizer failed. Set LEGAL_TRANSLATION_ALLOW_UNSANITIZED=1 only for an explicit bypass."
+        exit 1
     fi
 }
 
-# ─── Method 1: python-docx ───────────────────────────────────────────────
+# ─── Method 1: OOXML direct extraction ──────────────────────────────────
+try_ooxml_extract() {
+    python3 "$SCRIPT_DIR/docx-extract.py" "$INPUT_FILE" "$OUTPUT_FILE" "$STRUCTURE_FILE" 2>/dev/null
+}
+
+# ─── Method 2: python-docx ───────────────────────────────────────────────
 try_python_docx() {
     python3 -c "
 import sys
@@ -77,12 +105,25 @@ for para in doc.paragraphs:
 
     lines.append('')
 
+for table in doc.tables:
+    rows = []
+    for row in table.rows:
+        rows.append([cell.text.strip().replace('\n', ' ') for cell in row.cells])
+    if rows:
+        width = max(len(row) for row in rows)
+        rows = [row + [''] * (width - len(row)) for row in rows]
+        lines.append('| ' + ' | '.join(rows[0]) + ' |')
+        lines.append('| ' + ' | '.join('---' for _ in rows[0]) + ' |')
+        for row in rows[1:]:
+            lines.append('| ' + ' | '.join(row) + ' |')
+        lines.append('')
+
 with open('$OUTPUT_FILE', 'w', encoding='utf-8') as f:
     f.write('\n'.join(lines))
 " 2>/dev/null
 }
 
-# ─── Method 2: pandoc ────────────────────────────────────────────────────
+# ─── Method 3: pandoc ────────────────────────────────────────────────────
 try_pandoc() {
     if command -v pandoc &>/dev/null; then
         pandoc "$INPUT_FILE" -t markdown --wrap=none -o "$OUTPUT_FILE" 2>/dev/null
@@ -91,7 +132,7 @@ try_pandoc() {
     return 1
 }
 
-# ─── Method 3: Basic XML extraction ─────────────────────────────────────
+# ─── Method 4: Basic XML extraction ─────────────────────────────────────
 try_xml_extract() {
     python3 -c "
 import zipfile
@@ -124,7 +165,9 @@ with open('$OUTPUT_FILE', 'w', encoding='utf-8') as f:
 # ─── Execute with fallback chain ─────────────────────────────────────────
 echo "Parsing DOCX: $INPUT_FILE"
 
-if try_python_docx; then
+if try_ooxml_extract; then
+    echo "  Method: OOXML direct extraction"
+elif try_python_docx; then
     echo "  Method: python-docx"
 elif try_pandoc; then
     echo "  Method: pandoc"
@@ -137,9 +180,15 @@ else
 fi
 
 if [ -f "$OUTPUT_FILE" ]; then
+    if [ ! -f "$STRUCTURE_FILE" ]; then
+        python3 "$SCRIPT_DIR/docx-extract.py" "$INPUT_FILE" "$OUTPUT_FILE" "$STRUCTURE_FILE" >/dev/null 2>&1 || true
+    fi
     run_sanitizer
     LINES=$(wc -l < "$OUTPUT_FILE" | tr -d ' ')
     echo "  Output: $OUTPUT_FILE ($LINES lines)"
+    if [ -f "$STRUCTURE_FILE" ]; then
+        echo "  Structure: $STRUCTURE_FILE"
+    fi
 else
     echo "Error: Output file was not created."
     exit 1

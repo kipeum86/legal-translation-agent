@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "required": ["schema_version", "format", "input_file", "paragraphs", "tables", "headers", "footers", "footnotes", "comments", "tracked_changes_detected", "page_text_density", "ocr_required_likely", "extraction_warnings"],
+  "properties": {
+    "schema_version": {"type": "integer"},
+    "format": {"type": "string", "enum": ["docx", "pdf"]},
+    "input_file": {"type": "string"},
+    "paragraphs": {"type": "array", "items": {"type": "object"}},
+    "tables": {"type": "array", "items": {"type": "object"}},
+    "headers": {"type": "array", "items": {"type": "object"}},
+    "footers": {"type": "array", "items": {"type": "object"}},
+    "footnotes": {"type": "array", "items": {"type": "object"}},
+    "comments": {"type": "array", "items": {"type": "object"}},
+    "tracked_changes_detected": {"type": "boolean"},
+    "page_text_density": {"type": "array", "items": {"type": "object"}},
+    "ocr_required_likely": {"type": "boolean"},
+    "extraction_warnings": {"type": "array", "items": {"type": "string"}}
+  }
+}

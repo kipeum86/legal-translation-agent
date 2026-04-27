@@ -20,13 +20,17 @@ import sys
 from pathlib import Path
 from collections import OrderedDict
 
+TERMINOLOGY_SCRIPTS = Path(__file__).resolve().parents[2] / "terminology-manager" / "scripts"
+sys.path.insert(0, str(TERMINOLOGY_SCRIPTS))
+
+from term_patterns import unique_terms  # noqa: E402
 
 # ─── Language-specific patterns ───────────────────────────────────────────
 
 ARTICLE_PATTERNS = {
     "en": [
-        r"^(?:\*{0,2})(?:Article|ARTICLE)\s+(\d+)",
-        r"^(?:\*{0,2})(?:Section|SECTION)\s+(\d+)",
+        r"^(?:\*{0,2})(?:Article|ARTICLE)\s+(\d+(?:\.\d+)*)",
+        r"^(?:\*{0,2})(?:Section|SECTION)\s+(\d+(?:\.\d+)*)",
     ],
     "ko": [
         r"^제\s*(\d+)\s*조",
@@ -38,7 +42,7 @@ ARTICLE_PATTERNS = {
         r"^第\s*([一二三四五六七八九十百零\d]+)\s*條",
     ],
     "ja": [
-        r"^第\s*(\d+)\s*条",
+        r"^第\s*([一二三四五六七八九十百零\d]+)\s*条",
     ],
 }
 
@@ -91,29 +95,6 @@ ENUMERATED_ITEM_PATTERNS = {
     ],
 }
 
-DEFINED_TERM_PATTERNS = {
-    "en": [
-        r'"([^"]{2,60})"',                             # "Defined Term"
-        r'\u201c([^\u201d]{2,60})\u201d',              # "Defined Term" (smart quotes)
-    ],
-    "ko": [
-        r"['\u2018\u2019\u201c\u201d\"]([\w\s]{2,40})['\u2018\u2019\u201c\u201d\"]",
-        r"이하\s+['\"\u2018\u201c]([^'\"\u2019\u201d]+)['\"\u2019\u201d]",  # 이하 'X'라 한다
-    ],
-    "zh-cn": [
-        r"[\u201c\u300c]([^\u201d\u300d]{2,30})[\u201d\u300d]",  # "X" or 「X」
-        r"以下简称['\"\u201c\u300c]([^'\"\u201d\u300d]+)",         # 以下简称"X"
-    ],
-    "zh-tw": [
-        r"[\u201c\u300c]([^\u201d\u300d]{2,30})[\u201d\u300d]",  # "X" or 「X」
-        r"以下簡稱['\"\u201c\u300c]([^'\"\u201d\u300d]+)",         # 以下簡稱「X」
-    ],
-    "ja": [
-        r"[\u300c\u300e]([^\u300d\u300f]{2,30})[\u300d\u300f]",  # 「X」or『X』
-        r"以下[「\u300c]([^」\u300d]+)[」\u300d]という",            # 以下「X」という
-    ],
-}
-
 FOOTNOTE_PATTERNS = {
     "en": [r"\[\s*(\d+)\s*\]", r"\*{1,3}"],
     "ko": [r"\[\s*(\d+)\s*\]", r"각주\s*(\d+)"],
@@ -146,6 +127,62 @@ def strip_markdown(line: str) -> str:
     return s.strip()
 
 
+def cjk_number_to_int(value: str) -> int | None:
+    """Convert simple CJK numerals up to hundreds to an integer."""
+    value = value.strip()
+    if not value:
+        return None
+    if value.isdigit():
+        return int(value)
+
+    digits = {
+        "零": 0,
+        "〇": 0,
+        "一": 1,
+        "二": 2,
+        "兩": 2,
+        "两": 2,
+        "三": 3,
+        "四": 4,
+        "五": 5,
+        "六": 6,
+        "七": 7,
+        "八": 8,
+        "九": 9,
+    }
+    units = {"十": 10, "百": 100}
+
+    total = 0
+    current = 0
+    saw_unit = False
+    for char in value:
+        if char in digits:
+            current = digits[char]
+        elif char in units:
+            saw_unit = True
+            unit = units[char]
+            if current == 0:
+                current = 1
+            total += current * unit
+            current = 0
+        else:
+            return None
+    total += current
+    if total == 0 and not saw_unit:
+        return None
+    return total
+
+
+def canonical_article_id(article_number: str) -> str:
+    """Build a cross-language comparable article identifier."""
+    normalized = cjk_number_to_int(article_number)
+    if normalized is None:
+        normalized_text = re.sub(r"\s+", "", article_number.lower())
+    else:
+        normalized_text = str(normalized)
+    return f"article:{normalized_text}"
+
+
 def count_matches(text: str, patterns: list[str], per_line: bool = True) -> list[dict]:
     """Count regex matches. Returns list of {line, match} dicts."""
     results = []
@@ -175,8 +212,10 @@ def extract_articles(text: str, lang: str) -> list[dict]:
             m = re.search(pattern, clean)
             if m:
                 article_id = m.group(0).strip()
+                article_number = m.group(1).strip()
                 articles.append({
                     "id": article_id,
+                    "canonical_id": canonical_article_id(article_number),
                     "line": i,
                     "raw_text": line.strip(),
                 })
@@ -212,14 +251,7 @@ def count_enumerated_items_for_article(text_block: str, lang: str) -> int:
 
 def extract_defined_terms(text: str, lang: str) -> list[str]:
     """Extract unique defined terms from the document."""
-    patterns = DEFINED_TERM_PATTERNS.get(lang, [])
-    terms = set()
-    for pattern in patterns:
-        for m in re.finditer(pattern, text):
-            term = m.group(1).strip()
-            if len(term) >= 2 and not term.isdigit():
-                terms.add(term)
-    return sorted(terms)
+    return unique_terms(text, lang)
 
 
 def count_footnotes(text: str, lang: str) -> int:
@@ -311,6 +343,7 @@ def build_inventory(input_file: str, lang: str) -> dict:
         total_enumerated += enum_count
         article_details.append({
             "id": article_info["id"],
+            "canonical_id": article_info["canonical_id"],
             "sub_clauses": sub_count,
             "enumerated_items": enum_count,
         })

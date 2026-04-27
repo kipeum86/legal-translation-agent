@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "required": ["job_id", "started", "last_updated", "current_step", "last_completed_step", "status", "mode", "source_lang", "target_lang", "retry_count", "retry_budget", "failure_reason", "failure_history", "artifacts"],
+  "properties": {
+    "job_id": {"type": "string"},
+    "started": {"type": "string"},
+    "last_updated": {"type": "string"},
+    "current_step": {"type": "integer"},
+    "last_completed_step": {"type": "integer"},
+    "status": {"type": "string", "enum": ["in_progress", "completed", "failed", "paused"]},
+    "mode": {"type": "string", "enum": ["fast", "normal", "hard"]},
+    "source_lang": {"type": "string"},
+    "target_lang": {"type": "string"},
+    "document_type": {"type": ["string", "null"]},
+    "library_profile": {"type": ["string", "null"]},
+    "output_format": {"type": ["string", "null"]},
+    "retry_count": {"type": "integer"},
+    "retry_budget": {"type": "integer"},
+    "failure_reason": {"type": ["string", "null"]},
+    "failure_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "reason", "recorded_at", "retry_count_after"],
+        "properties": {
+          "step": {"type": "integer"},
+          "reason": {"type": "string"},
+          "recorded_at": {"type": "string"},
+          "retry_count_after": {"type": "integer"}
+        }
+      }
+    },
+    "validation_policy": {"type": "string", "enum": ["warn", "enforce-new-jobs", "enforce-all"]},
+    "validation_warnings": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "artifacts": {"type": "object"}
+  }
+}

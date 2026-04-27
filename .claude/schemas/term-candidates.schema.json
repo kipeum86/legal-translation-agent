@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "required": ["source_file", "source_lang", "candidate_count", "candidates"],
+  "properties": {
+    "source_file": {"type": "string"},
+    "source_lang": {"type": "string"},
+    "candidate_count": {"type": "integer"},
+    "candidates": {"type": "array", "items": {"type": "object"}}
+  }
+}

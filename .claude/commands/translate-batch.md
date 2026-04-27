@@ -8,17 +8,24 @@ Execute WF4 — Batch Translation Pipeline:
 1. Scan `input/` folder for all source documents
 2. List detected files and confirm batch parameters with user:
    - Target language
-   - Mode (Normal/Hard)
+   - Mode (Fast/Normal/Hard)
    - Library profile (optional)
    - Processing order
 3. If $ARGUMENTS provided, parse for batch parameters
-4. Execute WF1 for each document sequentially:
-   - Document 1: full WF1 pipeline, establishing working glossary
-   - Documents 2–N: WF1 with cumulative working glossary (new terms appended, existing locked)
-5. After all documents complete: cross-document consistency check
+4. Prefer `.claude/scripts/translate-batch.py start --dry-run --input input/ --target <lang>`
+   to create the batch plan and glossary review queue.
+5. Review `output/working/batches/<batch-id>/batch-glossary-review.json` before translation:
+   - `locks.defined_terms` and `locks.party_names` are batch-level lock candidates
+   - `conflicts[]` requires user decision; do not auto-resolve conflicts
+   - Phase 3 is blocked until the review queue is approved
+6. Execute batch in three phases:
+   - Phase 1: parse, structure count, and term candidate extraction for all documents in parallel
+   - Phase 2: resolve/approve `batch-glossary-review.json`
+   - Phase 3: translate documents in parallel with batch-level locked terms
+7. After all documents complete: cross-document consistency check
    - Identical translation of party names across documents
    - Identical translation of defined terms appearing in multiple documents
    - Consistent date format conventions
    - Consistent legal reference phrasing
-6. Merge cumulative glossary into persistent glossary store
-7. Present batch summary to user
+8. Merge cumulative glossary into persistent glossary store
+9. Present batch summary to user

@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "required": ["total_changes", "changes", "change_types"],
+  "properties": {
+    "total_changes": {"type": "integer"},
+    "changes": {"type": "array", "items": {"type": "object"}},
+    "change_types": {"type": "object"}
+  }
+}

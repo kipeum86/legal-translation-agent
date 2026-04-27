@@ -9,10 +9,11 @@ Deterministic comparison of source and target document structures to guarantee z
    - Usage: `python3 structural-counter.py <synthesized.md> <target_lang> <target-inventory.json>`
 
 2. **Count Comparison** (`scripts/count-comparator.py`)
-   - 1:1 article-level comparison: sub-clauses, enumerated items
-   - Document-level comparison: total articles, defined terms, footnotes
+   - Canonical article-ID comparison: missing, extra, and reordered articles
+   - Article-level comparison: sub-clauses, enumerated items
+   - Document-level blocking comparison: total articles, total sub-clauses, total enumerated items, defined term count, footnotes
    - Usage: `python3 scripts/count-comparator.py <source-inventory.json> <target-inventory.json> <output_path>`
-   - Outputs: `verification-checklist.json` with per-article PASS/FAIL status
+   - Outputs: `verification-checklist.json` with `blocking_failures` and per-article PASS/FAIL status
 
 3. **LLM Spot-Check** (LLM judgment)
    - For any FAIL articles, perform targeted review of the specific gap

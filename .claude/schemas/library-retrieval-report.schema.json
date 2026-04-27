@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "required": ["status", "profile", "lang_pair", "selected_count", "selected_references", "style_guide_available"],
+  "properties": {
+    "status": {"type": "string", "enum": ["PASS", "SKIPPED", "STYLE_ONLY"]},
+    "skip_reason": {"type": ["string", "null"]},
+    "profile": {"type": "string"},
+    "lang_pair": {"type": "string"},
+    "top_k": {"type": "integer"},
+    "source_terms": {"type": "array", "items": {"type": "string"}},
+    "selected_count": {"type": "integer"},
+    "selected_references": {"type": "array", "items": {"type": "object"}},
+    "style_guide_available": {"type": "boolean"}
+  }
+}

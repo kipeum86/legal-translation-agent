@@ -1,6 +1,10 @@
 # quality-checker Skill
 
-Execute quality gate checklists before final delivery. 6-item gate for Normal mode, 10-item gate for Hard mode.
+Execute quality gate checklists before final delivery. Fast mode uses deterministic draft checks, Normal mode uses the 6-item gate, Hard mode uses the 10-item gate.
+
+## Fast Mode — Draft Checks
+
+Fast output is for draft / internal review only. It must still pass structural verification and glossary usage checks before delivery, but it does not run Pass B or synthesis.
 
 ## Normal Mode — 6-Item Quality Gate (Step 7)
 

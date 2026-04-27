@@ -26,6 +26,11 @@ from datetime import date
 from pathlib import Path
 from collections import OrderedDict
 
+SCRIPTS_ROOT = Path(__file__).resolve().parents[3] / "scripts"
+sys.path.insert(0, str(SCRIPTS_ROOT))
+
+from private_path import PathPolicyError, resolve_private_path  # noqa: E402
+
 
 def sort_lang_pair(src: str, tgt: str) -> tuple[str, str]:
     """Sort language pair alphabetically for consistent file naming."""
@@ -157,6 +162,39 @@ def append_conflicts_log(conflicts: list[dict], log_path: Path):
             )
 
 
+def write_conflicts_queue(conflicts: list[dict], queue_path: Path):
+    """Write machine-readable conflicts for user review."""
+    if not conflicts:
+        return
+    existing = {"conflicts": []}
+    if queue_path.exists():
+        try:
+            existing = json.loads(queue_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, ValueError):
+            existing = {"conflicts": []}
+
+    queue_entries = existing.get("conflicts", [])
+    for conflict in conflicts:
+        queue_entries.append({
+            "source_term": conflict.get("source_term", ""),
+            "source_lang": conflict.get("source_lang", ""),
+            "target_lang": conflict.get("target_lang", ""),
+            "candidates": [
+                conflict.get("persistent_target", ""),
+                conflict.get("working_target", ""),
+            ],
+            "origins": ["persistent", "working"],
+            "recommended": conflict.get("persistent_target", ""),
+            "requires_user_decision": True,
+            "date": conflict.get("date", ""),
+        })
+
+    queue_path.write_text(
+        json.dumps({"conflicts": queue_entries}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def update_stats_file(stats: dict, stats_path: Path, merge_date: str):
     """Update the aggregate glossary statistics file."""
     existing = {}
@@ -189,8 +227,12 @@ def main():
         print("Usage: python3 glossary-merger.py <working_glossary.json> <persistent_glossary_dir> [--date YYYY-MM-DD]")
         sys.exit(1)
 
-    working_path = Path(sys.argv[1])
-    glossary_dir = Path(sys.argv[2])
+    try:
+        working_path = Path(resolve_private_path(sys.argv[1]))
+        glossary_dir = Path(resolve_private_path(sys.argv[2]))
+    except PathPolicyError as e:
+        print(f"Error: {e}")
+        sys.exit(2)
 
     # Optional date override
     merge_date = date.today().isoformat()
@@ -244,6 +286,7 @@ def main():
     # Append conflicts
     if conflicts:
         append_conflicts_log(conflicts, glossary_dir / "conflicts.log")
+        write_conflicts_queue(conflicts, working_path.parent / "glossary-conflicts-queue.json")
 
     # Update stats
     update_stats_file(stats, glossary_dir / "glossary-stats.json", merge_date)

@@ -31,3 +31,16 @@ $LEGAL_TRANSLATION_PRIVATE_DIR/
 Source legal documents and house glossaries are confidential. Keeping
 them outside the repo tree eliminates the possibility of an accidental
 `git add --force` or a mis-scoped branch push leaking them.
+
+## Migrating Existing Repo-Root Data
+
+Run a dry-run first:
+
+```bash
+python3 .claude/scripts/migrate-private-data.py --dry-run
+```
+
+The helper writes a migration manifest under
+`$LEGAL_TRANSLATION_PRIVATE_DIR/_private/migration-manifests/`. When you run
+with `--apply`, it records both source and target inventories with sha256
+checksums. Public repo scaffolding under `library/_example` is never moved.

@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "required": ["status", "findings", "auto_corrections_applied"],
+  "properties": {
+    "status": {"type": "string", "enum": ["completed", "skipped", "failed"]},
+    "skip_reason": {"type": "string"},
+    "findings": {"type": "array", "items": {"type": "object"}},
+    "auto_corrections_applied": {"type": "array", "items": {"type": "object"}}
+  }
+}

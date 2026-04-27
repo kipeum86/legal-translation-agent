@@ -1,0 +1,34 @@
+{
+  "source_lang": "en",
+  "target_lang": "ko",
+  "library_profile": "acme",
+  "entries": [
+    {
+      "source_term": "Confidential Information",
+      "target_term": "비밀정보",
+      "source_lang": "en",
+      "target_lang": "ko",
+      "context": "Article 1. Definitions",
+      "origin": "library",
+      "library_profile": "acme",
+      "alternatives_considered": ["기밀정보"],
+      "selection_rationale": "Fixture locks the Library term.",
+      "status": "confirmed",
+      "last_used": "2026-04-27",
+      "usage_count": 1
+    },
+    {
+      "source_term": "Receiving Party",
+      "target_term": "수령당사자",
+      "source_lang": "en",
+      "target_lang": "ko",
+      "context": "Article 2. Obligations",
+      "origin": "llm",
+      "alternatives_considered": ["수령자"],
+      "selection_rationale": "Legal party label in the fixture.",
+      "status": "confirmed",
+      "last_used": "2026-04-27",
+      "usage_count": 1
+    }
+  ]
+}

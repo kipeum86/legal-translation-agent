@@ -11,6 +11,7 @@
 #
 # Outputs:
 #   <output_dir>/source-parsed.md — Full text in markdown-ish format
+#   <output_dir>/source-structure.json — page density and OCR heuristics
 
 set -euo pipefail
 
@@ -19,9 +20,18 @@ if [ $# -lt 2 ]; then
     exit 1
 fi
 
-INPUT_FILE="$1"
-OUTPUT_DIR="$2"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+PATH_RESOLVER="$REPO_ROOT/.claude/scripts/private-path.py"
+
+resolve_path() {
+    python3 "$PATH_RESOLVER" "$1"
+}
+
+INPUT_FILE="$(resolve_path "$1")"
+OUTPUT_DIR="$(resolve_path "$2")"
 OUTPUT_FILE="${OUTPUT_DIR}/source-parsed.md"
+STRUCTURE_FILE="${OUTPUT_DIR}/source-structure.json"
 
 if [ ! -f "$INPUT_FILE" ]; then
     echo "Error: Input file not found: $INPUT_FILE"
@@ -33,8 +43,21 @@ mkdir -p "$OUTPUT_DIR"
 run_sanitizer() {
     local sanitize_script
     sanitize_script="$(cd "$(dirname "$0")/../../ingest-sanitizer/scripts" && pwd)/sanitize.py"
-    if [ -f "$sanitize_script" ]; then
-        python3 "$sanitize_script" "$OUTPUT_FILE" "$OUTPUT_FILE" 2>&1 | sed 's/^/  /' || true
+    if [ ! -f "$sanitize_script" ]; then
+        if [ "${LEGAL_TRANSLATION_ALLOW_UNSANITIZED:-}" = "1" ]; then
+            echo "  Warning: sanitizer not found; continuing because LEGAL_TRANSLATION_ALLOW_UNSANITIZED=1"
+            return 0
+        fi
+        echo "Error: Sanitizer not found: $sanitize_script"
+        exit 1
+    fi
+    if ! python3 "$sanitize_script" "$OUTPUT_FILE" "$OUTPUT_FILE" 2>&1 | sed 's/^/  /'; then
+        if [ "${LEGAL_TRANSLATION_ALLOW_UNSANITIZED:-}" = "1" ]; then
+            echo "  Warning: sanitizer failed; continuing because LEGAL_TRANSLATION_ALLOW_UNSANITIZED=1"
+            return 0
+        fi
+        echo "Error: Sanitizer failed. Set LEGAL_TRANSLATION_ALLOW_UNSANITIZED=1 only for an explicit bypass."
+        exit 1
     fi
 }
 
@@ -95,8 +118,10 @@ fi
 
 if [ -f "$OUTPUT_FILE" ]; then
     run_sanitizer
+    python3 "$SCRIPT_DIR/pdf-structure.py" "$INPUT_FILE" "$OUTPUT_FILE" "$STRUCTURE_FILE"
     LINES=$(wc -l < "$OUTPUT_FILE" | tr -d ' ')
     echo "  Output: $OUTPUT_FILE ($LINES lines)"
+    echo "  Structure: $STRUCTURE_FILE"
 else
     echo "Error: Output file was not created."
     exit 1

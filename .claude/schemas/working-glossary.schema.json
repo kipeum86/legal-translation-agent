@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "required": ["source_lang", "target_lang", "entries"],
+  "properties": {
+    "source_lang": {"type": "string"},
+    "target_lang": {"type": "string"},
+    "library_profile": {"type": ["string", "null"]},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_term", "target_term", "source_lang", "target_lang", "origin", "status"],
+        "properties": {
+          "source_term": {"type": "string"},
+          "target_term": {"type": "string"},
+          "source_lang": {"type": "string"},
+          "target_lang": {"type": "string"},
+          "context": {"type": "string"},
+          "origin": {"type": "string", "enum": ["persistent", "library", "llm"]},
+          "library_profile": {"type": ["string", "null"]},
+          "alternatives_considered": {"type": "array", "items": {"type": "string"}},
+          "selection_rationale": {"type": "string"},
+          "status": {"type": "string", "enum": ["confirmed", "tentative"]},
+          "last_used": {"type": "string"},
+          "usage_count": {"type": "integer"}
+        }
+      }
+    }
+  }
+}

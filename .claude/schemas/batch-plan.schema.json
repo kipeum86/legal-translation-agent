@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "required": ["schema_version", "batch_id", "created_at", "dry_run", "target_lang", "source_lang", "mode", "input_path", "document_count", "documents", "concurrency", "phases"],
+  "properties": {
+    "schema_version": {"type": "integer"},
+    "batch_id": {"type": "string"},
+    "created_at": {"type": "string"},
+    "dry_run": {"type": "boolean"},
+    "target_lang": {"type": "string"},
+    "source_lang": {"type": "string"},
+    "mode": {"type": "string", "enum": ["fast", "normal", "hard"]},
+    "library_profile": {"type": ["string", "null"]},
+    "input_path": {"type": "string"},
+    "document_count": {"type": "integer"},
+    "documents": {"type": "array", "items": {"type": "object"}},
+    "concurrency": {"type": "object"},
+    "lock_policy": {"type": "object"},
+    "review_queue_path": {"type": "string"},
+    "phases": {"type": "array", "items": {"type": "object"}}
+  }
+}

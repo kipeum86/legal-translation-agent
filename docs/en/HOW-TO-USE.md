@@ -68,7 +68,7 @@ On your first session, the agent runs a brief **onboarding interview** (`/setup`
 4. Default settings (output format, translation mode, English variant)
 5. Optional: create a Library profile
 
-Settings are saved to `config.json`. Re-run anytime with `/setup`.
+Settings are saved to `${LEGAL_TRANSLATION_PRIVATE_DIR}/config.json`. Re-run anytime with `/setup`.
 
 ### Private Data Location
 
@@ -130,12 +130,17 @@ All 5 languages support bidirectional translation:
 
 ---
 
-## Two Translation Modes
+## Three Translation Modes
 
 | Mode | What It Does | Cost | When to Use |
 |------|-------------|------|-------------|
-| **Normal** | Dual-pass → synthesis → structural verification | ~2.5x base | Standard documents — default |
+| **Fast** | Single draft → deterministic structure/glossary checks | ~1x base | Internal drafts only |
+| **Normal** | Differentiated dual-pass → synthesis → structural verification | ~2.5x base | Standard documents — default |
 | **Hard** | Normal + back-translation + Library comparison + editorial polish | ~5-6x base | Publication-grade, high-stakes translations |
+
+### Fast Mode Draft Flow (Steps 1–5)
+
+Fast mode runs document analysis, terminology setup, one translation draft, deterministic structure/glossary checks, and draft output assembly. It skips Pass B and synthesis, so the output must remain labeled as draft / internal review only.
 
 ### Normal Mode Pipeline (Steps 1–7)
 
@@ -276,10 +281,12 @@ Translating multiple related documents? Use batch mode:
 
 ### How It Works
 
-1. **Document 1**: Full translation pipeline, establishing a working glossary
-2. **Documents 2–N**: Full pipeline with cumulative working glossary (new terms appended, existing terms locked)
-3. **Cross-document consistency**: Party names, defined terms, date formats, and legal reference phrasing checked across all documents
-4. **Final glossary merge**: All new terms persisted at the end
+1. **Plan**: Create a dry-run batch plan with local-script and LLM concurrency limits
+2. **Phase 1**: Parse, structure-count, and extract term candidates for all documents in parallel
+3. **Review**: Approve `batch-glossary-review.json`; party names and defined terms are locked before translation
+4. **Phase 3**: Translate documents in parallel using the approved batch-level locks
+5. **Cross-document consistency**: Party names, defined terms, date formats, and legal reference phrasing checked across all documents
+6. **Final glossary merge**: All new terms persisted at the end
 
 This is ideal for translating a set of related agreements (e.g., an NDA + License Agreement + SaaS Agreement for the same deal).
 
@@ -320,6 +327,8 @@ Normal mode is sufficient for most work. Use Hard mode when:
 - Client or counterparty will rely directly on the translation
 - The document will be published or distributed externally
 - You need the translation compared against existing reference translations
+
+Use Fast mode only when you need a quick internal draft and a qualified reviewer will still check the result before reliance.
 
 ### Provide Reference Translations
 

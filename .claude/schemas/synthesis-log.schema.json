@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "required": ["total_divergences", "decisions"],
+  "properties": {
+    "total_divergences": {"type": "integer"},
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["location", "pass_a", "pass_b", "final", "source", "rationale"],
+        "properties": {
+          "location": {"type": "string"},
+          "pass_a": {"type": "string"},
+          "pass_b": {"type": "string"},
+          "final": {"type": "string"},
+          "source": {"type": "string"},
+          "rationale": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "required": ["schema_version", "batch_id", "created_at", "status", "requires_user_decision", "requires_lock_approval", "lock_policy", "documents", "locks", "conflicts", "extraction_notes"],
+  "properties": {
+    "schema_version": {"type": "integer"},
+    "batch_id": {"type": "string"},
+    "created_at": {"type": "string"},
+    "status": {"type": "string", "enum": ["ready", "pending_user_review"]},
+    "requires_user_decision": {"type": "boolean"},
+    "requires_lock_approval": {"type": "boolean"},
+    "lock_policy": {
+      "type": "object",
+      "required": ["automatic_conflict_resolution", "locked_categories", "phase_3_requires"],
+      "properties": {
+        "automatic_conflict_resolution": {"type": "boolean"},
+        "locked_categories": {"type": "array", "items": {"type": "string"}},
+        "phase_3_requires": {"type": "string"}
+      }
+    },
+    "documents": {"type": "array", "items": {"type": "object"}},
+    "locks": {
+      "type": "object",
+      "required": ["defined_terms", "party_names"],
+      "properties": {
+        "defined_terms": {"type": "array", "items": {"type": "object"}},
+        "party_names": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "conflicts": {"type": "array", "items": {"type": "object"}},
+    "extraction_notes": {"type": "array", "items": {"type": "object"}}
+  }
+}

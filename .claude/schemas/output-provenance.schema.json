@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "required": ["schema_version", "created_at", "job_id", "mode", "format", "output", "inputs", "appendix_policy", "manifest"],
+  "properties": {
+    "schema_version": {"type": "integer"},
+    "created_at": {"type": "string"},
+    "job_id": {"type": ["string", "null"]},
+    "mode": {"type": "string"},
+    "format": {"type": "string"},
+    "output": {"type": "object"},
+    "inputs": {"type": "array", "items": {"type": "object"}},
+    "appendix_policy": {"type": "object"},
+    "manifest": {"type": "object"}
+  }
+}

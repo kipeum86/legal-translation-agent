@@ -25,6 +25,8 @@ so they are less likely to mistake it for system-level instructions.
    - `python3 sanitize.py <input_file> <output_file>`
    - Writes `<output_file>` (sanitized) + `<output_file>.audit.json` (sidecar)
    - Non-zero exit only on I/O errors — presence of matches is not a failure
+   - Parse scripts treat sanitizer errors as blocking by default. Use
+     `LEGAL_TRANSLATION_ALLOW_UNSANITIZED=1` only for an explicit, logged bypass.
 
 #### Manual verification workflow
 

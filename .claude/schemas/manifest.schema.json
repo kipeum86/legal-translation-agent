@@ -1,0 +1,112 @@
+{
+  "type": "object",
+  "required": ["schema_version", "job_id", "created_at", "dry_run", "retry_budget", "input", "artifacts", "failure_events", "requested", "steps"],
+  "properties": {
+    "schema_version": {"type": "integer"},
+    "job_id": {"type": "string"},
+    "created_at": {"type": "string"},
+    "dry_run": {"type": "boolean"},
+    "retry_budget": {"type": "integer"},
+    "validation_policy": {"type": "string", "enum": ["warn", "enforce-new-jobs", "enforce-all"]},
+    "input": {
+      "type": "object",
+      "required": ["path", "sha256", "byte_size"],
+      "properties": {
+        "path": {"type": "string"},
+        "sha256": {"type": ["string", "null"]},
+        "byte_size": {"type": ["integer", "null"]}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "sha256", "byte_size", "created_at", "producing_step", "schema"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "sha256": {"type": "string"},
+          "byte_size": {"type": "integer"},
+          "created_at": {"type": "string"},
+          "producing_step": {"type": "integer"},
+          "schema": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "failure_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "reason", "recorded_at", "retry_count_after"],
+        "properties": {
+          "step": {"type": "integer"},
+          "reason": {"type": "string"},
+          "recorded_at": {"type": "string"},
+          "retry_count_after": {"type": "integer"}
+        }
+      }
+    },
+    "validation_events": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "mode_plan": {
+      "type": "object",
+      "required": ["mode", "draft_only", "final_step", "quality_gate", "expected_artifacts", "artifact_count", "model_call_plan", "required_model_call_count", "conditional_model_call_count"],
+      "properties": {
+        "mode": {"type": "string", "enum": ["fast", "normal", "hard"]},
+        "draft_only": {"type": "boolean"},
+        "final_step": {"type": "integer"},
+        "quality_gate": {"type": "string"},
+        "expected_artifacts": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1
+        },
+        "artifact_count": {"type": "integer"},
+        "model_call_plan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["step", "name", "actor", "strategy", "required", "output"],
+            "properties": {
+              "step": {"type": "integer"},
+              "name": {"type": "string"},
+              "actor": {"type": "string"},
+              "strategy": {"type": "string"},
+              "required": {"type": "boolean"},
+              "condition": {"type": "string"},
+              "output": {"type": "string"}
+            }
+          }
+        },
+        "required_model_call_count": {"type": "integer"},
+        "conditional_model_call_count": {"type": "integer"}
+      }
+    },
+    "requested": {
+      "type": "object",
+      "required": ["target_lang", "source_lang", "mode", "output_format", "library_profile", "document_type"],
+      "properties": {
+        "target_lang": {"type": "string"},
+        "source_lang": {"type": "string"},
+        "mode": {"type": "string", "enum": ["fast", "normal", "hard"]},
+        "output_format": {"type": ["string", "null"]},
+        "library_profile": {"type": ["string", "null"]},
+        "document_type": {"type": ["string", "null"]}
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "name", "status"],
+        "properties": {
+          "step": {"type": "integer"},
+          "name": {"type": "string"},
+          "status": {"type": "string", "enum": ["pending", "in_progress", "completed", "retry_pending", "failed"]}
+        }
+      }
+    }
+  }
+}

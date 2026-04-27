@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "required": ["before", "after", "total_before_tokens", "total_after_tokens", "estimated_saved_tokens", "reduction_ratio", "repeated_source_tokens", "largest_waste"],
+  "properties": {
+    "label": {"type": ["string", "null"]},
+    "before": {"type": "array", "items": {"type": "object"}},
+    "after": {"type": "array", "items": {"type": "object"}},
+    "total_before_tokens": {"type": "integer"},
+    "total_after_tokens": {"type": "integer"},
+    "estimated_saved_tokens": {"type": "integer"},
+    "reduction_ratio": {"type": "number"},
+    "repeated_source_tokens": {"type": "integer"},
+    "largest_waste": {"type": "string"}
+  }
+}
